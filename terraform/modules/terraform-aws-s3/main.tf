@@ -3,15 +3,6 @@ resource "aws_s3_bucket" "this" {
   tags   = var.tags
 }
 
-resource "aws_s3_object" "this" {
-  for_each               = var.source_file_path != null ? fileset(var.source_file_path, var.source_file_pattern) : toset([])
-  key                    = each.value
-  bucket                 = aws_s3_bucket.this.id
-  source                 = "${var.source_file_path}/${each.value}"
-  source_hash            = filemd5("${var.source_file_path}/${each.value}")
-  server_side_encryption = "AES256"
-}
-
 resource "aws_s3_bucket_website_configuration" "this" {
   count  = var.is_bucket_website ? 1 : 0
   bucket = aws_s3_bucket.this.id
@@ -37,5 +28,4 @@ resource "aws_s3_bucket_website_configuration" "this" {
       protocol  = redirect_all_requests_to.value.protocol
     }
   }
-
 }
