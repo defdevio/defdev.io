@@ -8,3 +8,35 @@ module "s3" {
   source_file_path                     = each.value.source_file_path
   source_file_pattern                  = each.value.source_file_pattern
 }
+
+data "aws_iam_policy_document" "allow_cloudfront_origin" {
+  for_each = { for k, v in var.s3_buckets : k => v if k == "www.defdev.io" }
+  statement {
+    effect = "Allow"
+    sid    = "AllowCloudFrontOriginWwwDefdevIo"
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${module.s3[each.key].bucket_arn}/*",
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [module.cloudfront[each.key].arn]
+    }
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "allow_cloudfront_origin" {
+  for_each = { for k, v in var.s3_buckets : k => v if k == "www.defdev.io" }
+  bucket   = module.s3[each.key].bucket_id
+  policy   = data.aws_iam_policy_document.allow_cloudfront_origin[each.key].json
+}

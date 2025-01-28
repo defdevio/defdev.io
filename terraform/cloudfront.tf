@@ -1,5 +1,13 @@
-module "cloudfrount" {
-  for_each = var.s3_buckets
+# sleep for 5m to ensure that acm has had time to validate
+# the certificate once the validation record has been created
+# in cloudflare
+resource "time_sleep" "wait_5_minutes" {
+  create_duration = "5m"
+  depends_on = [cloudflare_record.www_defdev_io_acm_validation]
+}
+
+module "cloudfront" {
+  for_each = { for k, v in var.s3_buckets : k => v if k == "www.defdev.io" }
   source   = "./modules/terraform-aws-cloudfront"
 
   acm_certificate_arn = aws_acm_certificate.this.arn
@@ -12,4 +20,8 @@ module "cloudfrount" {
     description = "Access control for ${each.key}"
     origin_type = "s3"
   }
+
+  depends_on = [ 
+    time_sleep.wait_5_minutes
+  ]
 }

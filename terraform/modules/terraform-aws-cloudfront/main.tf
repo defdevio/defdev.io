@@ -1,4 +1,4 @@
-resource "aws_cloudfront_distribution" "s3_distribution" {
+resource "aws_cloudfront_distribution" "this" {
   aliases             = var.aliases
   default_root_object = var.default_root_object
   enabled             = true
