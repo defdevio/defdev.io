@@ -1,0 +1,36 @@
+<mjml>
+  <mj-body background-color="#212529" font-size="13px">
+    <mj-section background-color="#6f42c1" padding-bottom="0px" padding-top="0">
+      <mj-column width="100%">
+        <mj-text align="center" font-size="13px" color="#ffffff" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="18px" padding-top="28px">NEW CLIENT INQUIRY RECEIVED!
+          <p style="font-size:16px; color:white">[[ClientName]]</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#6f42c1" padding-bottom="5px" padding-top="0">
+      <mj-column width="100%">
+        <mj-divider border-color="#ffffff" border-width="2px" border-style="solid" padding-left="20px" padding-right="20px" padding-bottom="0px" padding-top="0"></mj-divider>
+        <mj-text align="center" color="#FFF" font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="28px" padding-top="28px"><span style="font-size:20px; font-weight:bold">Project Description</span>
+          <br />
+          <span style="font-size:15px">[[ProjectDescription]]</span>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#5a389a" padding-bottom="15px">
+      <mj-column>
+        <mj-text align="center" color="#FFF" font-size="15px" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="0px"><strong>Email Contact</strong></mj-text>
+        <mj-text align="center" color="#FFF" font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="20px" padding-top="10px">[[EmailContact]]</mj-text>
+      </mj-column>
+      <mj-column>
+        <mj-text align="center" color="#FFF" font-size="15px" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="0px"><strong>Phone Contact</strong></mj-text>
+        <mj-text align="center" color="#FFF" font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="20px" padding-top="10px">[[PhoneContact]]</mj-text>
+      </mj-column>
+      <mj-column>
+        <mj-text align="center" color="#FFF" font-size="15px" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="0px"><strong>Preferred Cloud</strong></mj-text>
+        <mj-text align="center" color="#FFF" font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="20px" padding-top="10px">[[PreferredCloud]]</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#6f42c1" padding-bottom="20px" padding-top="20px">
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -2,6 +2,7 @@ locals {
   content_type = {
     css  = "text/css"
     html = "text/html"
+    jpeg = "image/jpeg"
     json = "application/json"
     map  = "text/css"
     png  = "image/png"

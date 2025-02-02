@@ -3,7 +3,7 @@
 # in cloudflare
 resource "time_sleep" "wait_5_minutes" {
   create_duration = "5m"
-  depends_on = [cloudflare_record.www_defdev_io_acm_validation]
+  depends_on      = [cloudflare_record.www_defdev_io_acm_validation]
 }
 
 module "cloudfront" {
@@ -21,7 +21,7 @@ module "cloudfront" {
     origin_type = "s3"
   }
 
-  depends_on = [ 
+  depends_on = [
     time_sleep.wait_5_minutes
   ]
 }

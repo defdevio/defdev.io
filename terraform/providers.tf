@@ -7,6 +7,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_secretsmanager_secret" "cloudflare" {
+  name = "cloudflare"
+}
+
+ephemeral "aws_secretsmanager_secret_version" "cloudflare" {
+  secret_id = data.aws_secretsmanager_secret.cloudflare.arn
+}
+
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = jsondecode(ephemeral.aws_secretsmanager_secret_version.cloudflare.secret_string)["cloudflare_api_token"]
 }
