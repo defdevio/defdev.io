@@ -36,7 +36,6 @@ type Email struct {
 
 func handleRequest(ctx context.Context, event json.RawMessage) error {
 	var email Email
-
 	if err := json.Unmarshal(event, &email); err != nil {
 		log.Printf("failed to unmarshal event: %v", err)
 		return err
