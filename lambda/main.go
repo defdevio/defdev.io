@@ -55,7 +55,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 	template = strings.Replace(template, "[[PhoneContact]]", email.PhoneNumber, 1)
 	template = strings.Replace(template, "[[PreferredCloud]]", email.PreferredCloudProvider, 1)
 
-	rendered, err := mjml.ToHTML(ctx, template)
+	rendered, err := mjml.ToHTML(ctx, template, mjml.WithMinify(true))
 	if err != nil {
 		log.Printf("failed to render mjml template: %v", err)
 	}
