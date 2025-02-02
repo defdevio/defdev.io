@@ -29,12 +29,12 @@ func (m *DefDevIo) Publish(ctx context.Context, source *dagger.Directory, appSou
 
 func (m *DefDevIo) Build(source *dagger.Directory, appSources []*dagger.File) *dagger.Container {
 	build := m.BuildEnv(source).
-		WithExec([]string{"go", "build", "-o", "DefDevIo-emailer"}).
+		WithExec([]string{"go", "build", "-o", "lambda-emailer"}).
 		Directory("/src")
 	return dag.Container().From("alpine").
 		WithDirectory("/app", build).
-		WithFiles("/app/mjml/email.mjml", appSources).
-		WithEntrypoint([]string{"/app/DefDevIo-emailer"})
+		WithFiles("/app/mjml/", appSources).
+		WithEntrypoint([]string{"/app/lambda-emailer"})
 }
 
 func (m *DefDevIo) BuildEnv(source *dagger.Directory) *dagger.Container {

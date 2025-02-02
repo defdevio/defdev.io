@@ -22,3 +22,20 @@ resource "cloudflare_record" "www_defdev_io_cloudfront_record" {
   type    = "CNAME"
   zone_id = data.cloudflare_zone.this.id
 }
+
+resource "cloudflare_record" "ses_email_verification" {
+  content = module.ses.domain_verification_token
+  name    = "_amazonses.defdev.io"
+  ttl     = 300
+  type    = "TXT"
+  zone_id = data.cloudflare_zone.this.id
+}
+
+resource "cloudflare_record" "ses_dkim_records" {
+  count   = 3
+  content = "${module.ses.domain_dkim_tokens[count.index]}.dkim.amazonses.com"
+  name    = "${module.ses.domain_dkim_tokens[count.index]}._domainkey"
+  ttl     = 300
+  type    = "CNAME"
+  zone_id = data.cloudflare_zone.this.id
+}

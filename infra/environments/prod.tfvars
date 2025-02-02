@@ -1,6 +1,8 @@
 lambda_functions = {
   emailer = {
     spec = {
+      description = "Handles the Contact Us form for defdev.io"
+      timeout     = 60
       ecr = {
         is_immutable = false
         image_tag    = "latest"

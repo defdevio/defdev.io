@@ -41,7 +41,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 		return err
 	}
 
-	templateBytes, err := os.ReadFile("mjml/email.mjml")
+	templateBytes, err := os.ReadFile("/app/mjml/email.mjml")
 	if err != nil {
 		log.Printf("failed to read file: %v", err)
 		return err
@@ -64,6 +64,9 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 			ToAddresses: []string{"inquiries@defdev.io"},
 		},
 		Message: &types.Message{
+			Subject: &types.Content{
+				Data: aws.String("New client inquiry!"),
+			},
 			Body: &types.Body{
 				Html: &types.Content{
 					Data: &rendered,
