@@ -71,7 +71,7 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 				},
 			},
 		},
-		Source: aws.String("inquiries@defdev.io"),
+		Source: aws.String("noreply@defdev.io"),
 	})
 
 	if err != nil {
