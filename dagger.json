@@ -1,5 +1,5 @@
 {
-  "name": "lambda",
+  "name": "DefDevIo",
   "engineVersion": "v0.15.3",
   "sdk": "go",
   "source": "dagger"

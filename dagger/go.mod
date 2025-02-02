@@ -1,4 +1,4 @@
-module dagger/lambda
+module dagger/def-dev-io
 
 go 1.23.2
 

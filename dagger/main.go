@@ -1,4 +1,4 @@
-// A generated module for Lambda functions
+// A generated module for DefDevIo functions
 //
 // This module has been generated via dagger init and serves as a reference to
 // basic module structure as you get started with Dagger.
@@ -16,28 +16,28 @@ package main
 
 import (
 	"context"
-	"dagger/lambda/internal/dagger"
+	"dagger/def-dev-io/internal/dagger"
 	"fmt"
 )
 
-type Lambda struct{}
+type DefDevIo struct{}
 
-func (m *Lambda) Publish(ctx context.Context, source *dagger.Directory, appSources []*dagger.File, awsCredentials *dagger.File, region string, awsAccountId string, repo string) (string, error) {
+func (m *DefDevIo) Publish(ctx context.Context, source *dagger.Directory, appSources []*dagger.File, awsCredentials *dagger.File, region string, awsAccountId string, repo string) (string, error) {
 	ctr := m.Build(source, appSources)
 	return m.EcrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
 }
 
-func (m *Lambda) Build(source *dagger.Directory, appSources []*dagger.File) *dagger.Container {
+func (m *DefDevIo) Build(source *dagger.Directory, appSources []*dagger.File) *dagger.Container {
 	build := m.BuildEnv(source).
-		WithExec([]string{"go", "build", "-o", "lambda-emailer"}).
+		WithExec([]string{"go", "build", "-o", "DefDevIo-emailer"}).
 		Directory("/src")
 	return dag.Container().From("alpine").
 		WithDirectory("/app", build).
 		WithFiles("/app/mjml/email.mjml", appSources).
-		WithEntrypoint([]string{"/app/lambda-emailer"})
+		WithEntrypoint([]string{"/app/DefDevIo-emailer"})
 }
 
-func (m *Lambda) BuildEnv(source *dagger.Directory) *dagger.Container {
+func (m *DefDevIo) BuildEnv(source *dagger.Directory) *dagger.Container {
 	goCache := dag.CacheVolume("go")
 	return dag.Container().
 		From("golang:alpine").
@@ -48,7 +48,7 @@ func (m *Lambda) BuildEnv(source *dagger.Directory) *dagger.Container {
 }
 
 // example usage: "dagger call get-secret --aws-credentials ~/.aws/credentials"
-func (m *Lambda) GetSecret(ctx context.Context, awsCredentials *dagger.File) (string, error) {
+func (m *DefDevIo) GetSecret(ctx context.Context, awsCredentials *dagger.File) (string, error) {
 	ctr, err := m.WithAwsSecret(ctx, dag.Container().From("ubuntu:latest"), awsCredentials)
 	if err != nil {
 		return "", err
@@ -58,7 +58,7 @@ func (m *Lambda) GetSecret(ctx context.Context, awsCredentials *dagger.File) (st
 		Stdout(ctx)
 }
 
-func (m *Lambda) WithAwsSecret(ctx context.Context, ctr *dagger.Container, awsCredentials *dagger.File) (*dagger.Container, error) {
+func (m *DefDevIo) WithAwsSecret(ctx context.Context, ctr *dagger.Container, awsCredentials *dagger.File) (*dagger.Container, error) {
 	credsFile, err := awsCredentials.Contents(ctx)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (m *Lambda) WithAwsSecret(ctx context.Context, ctr *dagger.Container, awsCr
 	return ctr.WithMountedSecret("/root/.aws/credentials", secret), nil
 }
 
-func (m *Lambda) AwsCli(ctx context.Context, awsCredentials *dagger.File) (*dagger.Container, error) {
+func (m *DefDevIo) AwsCli(ctx context.Context, awsCredentials *dagger.File) (*dagger.Container, error) {
 	ctr := dag.Container().
 		From("public.ecr.aws/aws-cli/aws-cli:latest")
 	ctr, err := m.WithAwsSecret(ctx, ctr, awsCredentials)
@@ -78,7 +78,7 @@ func (m *Lambda) AwsCli(ctx context.Context, awsCredentials *dagger.File) (*dagg
 }
 
 // example usage: "dagger call ecr-push --region us-east-1 --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
-func (m *Lambda) EcrPush(ctx context.Context, awsCredentials *dagger.File, region, awsAccountId, repo string, pushCtr *dagger.Container) (string, error) {
+func (m *DefDevIo) EcrPush(ctx context.Context, awsCredentials *dagger.File, region, awsAccountId, repo string, pushCtr *dagger.Container) (string, error) {
 	// Get the ECR login password so we can authenticate with Publish WithRegistryAuth
 	ctr, err := m.AwsCli(ctx, awsCredentials)
 	if err != nil {

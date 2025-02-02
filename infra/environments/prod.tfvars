@@ -1,7 +1,10 @@
-ecr_repos = {
-  "defdevio/lambda-emailer" = {
+lambda_functions = {
+  emailer = {
     spec = {
-      is_immutable = false
+      ecr = {
+        is_immutable = false
+        image_tag    = "latest"
+      }
     }
   }
 }

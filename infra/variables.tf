@@ -1,10 +1,13 @@
-variable "ecr_repos" {
+variable "lambda_functions" {
   default     = {}
-  description = "A map of private ECR repos."
+  description = "A map of Lambda Functions specs."
 
   type = map(object({
     spec = object({
-      is_immutable = optional(bool, false)
+      ecr = object({
+        is_immutable = optional(bool, false)
+        image_tag    = string
+      })
     })
   }))
 }
