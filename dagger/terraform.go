@@ -88,13 +88,17 @@ func (m *DefDevIo) TerraformPlan(
 
 func (m *DefDevIo) TerraformSpecPlan(
 	ctx context.Context,
-	directory *dagger.Directory,
-	// set the version of the terraform binary to use
-	// +default="1.8.4"
-	terraformVersion string,
-	awsCredentials *dagger.File,
-	tfVarFile string,
+	// the app source code directory
 	appSource *dagger.Directory,
+	// the directory of the terraform code
+	directory *dagger.Directory,
+	// the terraform version to use
+	// +default="1.10.5"
+	terraformVersion string,
+	// the path to the AWS credentials file
+	awsCredentials *dagger.File,
+	// the terraform .tfvars file to use
+	tfVarFile string,
 ) (string, error) {
 	ctr, err := m.TerraformContainer(directory, terraformVersion, awsCredentials, appSource)
 	if err != nil {
@@ -128,10 +132,12 @@ func (m *DefDevIo) AutoApply(ctx context.Context) *dagger.File {
 }
 
 func (m *DefDevIo) TerraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {
+	terraCache := dag.CacheVolume("terraform")
 	ctr := dag.Container().
 		From(fmt.Sprintf("hashicorp/terraform:%s", terraformVersion)).
 		WithMountedDirectory("/mnt", directory).
 		WithDirectory("/src", appSource).
+		WithMountedCache("/mnt/.terraform", terraCache).
 		WithWorkdir("/mnt")
 
 	ctr, err := m.withAwsSecret(context.TODO(), ctr, awsCredentials)
