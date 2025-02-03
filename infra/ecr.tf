@@ -12,13 +12,14 @@ data "aws_iam_policy_document" "lambda_ecr_pull" {
       identifiers = ["lambda.amazonaws.com"]
     }
 
-    dynamic "condition" {
-      for_each = var.lambda_functions
-      content {
-        test     = "StringLike"
-        values   = ["arn:aws:lambda:${local.aws_region}:${local.aws_account_id}:function:${condition.key}"]
-        variable = "aws:SourceARN"
-      }
+    condition {
+      test     = "StringLike"
+      variable = "aws:SourceARN"
+
+      values = [
+        for key, _ in var.lambda_functions :
+        "arn:aws:lambda:${local.aws_region}:${local.aws_account_id}:function:${key}"
+      ]
     }
   }
 }

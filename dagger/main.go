@@ -20,7 +20,11 @@ import (
 	"fmt"
 )
 
-type DefDevIo struct{}
+type DefDevIo struct {
+	Plan    *dagger.Container
+	Apply   *dagger.Container
+	Actions []string
+}
 
 // example usage: "publish --source . --app-sources ~/foo.html,~/bar.js --aws-credentials ~/.aws/credentials --aws-account-id 12345  --repo test"
 func (m *DefDevIo) Publish(ctx context.Context, source *dagger.Directory, appSources []*dagger.File, awsCredentials *dagger.File, region string, awsAccountId string, repo string) (string, error) {
@@ -47,17 +51,6 @@ func (m *DefDevIo) buildEnv(source *dagger.Directory) *dagger.Container {
 		WithMountedCache("/root/.cache/go-build", goCache).
 		WithWorkdir("/src").
 		WithExec([]string{"go", "mod", "tidy"})
-}
-
-// example usage: "dagger call get-secret --aws-credentials ~/.aws/credentials"
-func (m *DefDevIo) getSecret(ctx context.Context, awsCredentials *dagger.File) (string, error) {
-	ctr, err := m.withAwsSecret(ctx, dag.Container().From("ubuntu:latest"), awsCredentials)
-	if err != nil {
-		return "", err
-	}
-	return ctr.
-		WithExec([]string{"bash", "-c", "cat /root/.aws/credentials | base64"}).
-		Stdout(ctx)
 }
 
 func (m *DefDevIo) withAwsSecret(ctx context.Context, ctr *dagger.Container, awsCredentials *dagger.File) (*dagger.Container, error) {
