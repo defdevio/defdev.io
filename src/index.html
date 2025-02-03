@@ -6,6 +6,7 @@
   <title>DefDev | Technology Consultants</title>
   <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <meta name="theme-color" content="#712cf9">
 
   <style>
@@ -143,35 +144,41 @@
             <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact Us</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="clientName" class="form-label">Name:</label>
-              <input class="form-control" id="clientName" type="text">
+          <form>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Name:</label>
+                <input class="form-control" id="clientName" type="text">
+              </div>
+              <div class="mb-3">
+                <label for="clientEmailAddress" class="form-label">Email address:</label>
+                <input type="email" class="form-control" id="clientEmailAddress" placeholder="name@example.com">
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Provide a brief description of your project:</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
+              </div>
+              <label for="cloudProviders" class="form-label">Who is your preferred cloud provider?</label>
+                <input class="form-control" list="datalistOptions" id="cloudProviders" placeholder="Click to choose or type to search...">
+                <datalist id="datalistOptions">
+                  <option value="AWS">
+                  <option value="Azure">
+                  <option value="GCP">
+                  <option value="Oracle Cloud">
+                  <option value="Digital Ocean">
+                  <option value="Other"></option>
+                  <option value="No preference"></option>
+                </datalist>
             </div>
-            <div class="mb-3">
-              <label for="clientEmailAddress" class="form-label">Email address:</label>
-              <input type="email" class="form-control" id="clientEmailAddress" placeholder="name@example.com">
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Provide a brief description of your project:</label>
-              <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-            <label for="cloudProviders" class="form-label">Who is your preferred cloud provider?</label>
-              <input class="form-control" list="datalistOptions" id="cloudProviders" placeholder="Click to choose or type to search...">
-              <datalist id="datalistOptions">
-                <option value="AWS">
-                <option value="Azure">
-                <option value="GCP">
-                <option value="Oracle Cloud">
-                <option value="Digital Ocean">
-                <option value="Other"></option>
-                <option value="No preference"></option>
-              </datalist>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-purple">Submit</button>
-          </div>
+            <div class="modal-footer">
+                <div>
+                  <div class="cf-turnstile mx-auto d-block" data-sitekey="0x4AAAAAAA7NTgzjoOOx24BJ"></div>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-purple">Submit</button>
+              </form>
+            </div>        
+          </form>
         </div>
       </div>
     </div>
