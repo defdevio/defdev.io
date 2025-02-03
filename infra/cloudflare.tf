@@ -10,9 +10,9 @@ resource "cloudflare_record" "www_defdev_io_acm_validation" {
 
   content = each.value.resource_record_value
   name    = each.value.resource_record_name
+  ttl     = 300
   type    = each.value.resource_record_type
   zone_id = data.cloudflare_zone.this.id
-  ttl     = 300
 }
 
 resource "cloudflare_record" "www_defdev_io_cloudfront_record" {
@@ -38,4 +38,11 @@ resource "cloudflare_record" "ses_dkim_records" {
   ttl     = 300
   type    = "CNAME"
   zone_id = data.cloudflare_zone.this.id
+}
+
+resource "cloudflare_turnstile_widget" "this" {
+  account_id = "df3e4e718a5be97812b586f67e959f19"
+  domains    = ["defdev.io"]
+  mode       = "managed"
+  name       = "Contact us form protection widget"
 }
