@@ -22,13 +22,15 @@ import (
 
 type DefDevIo struct{}
 
+// example usage: "publish --source . --app-sources ~/foo.html,~/bar.js --aws-credentials ~/.aws/credentials --aws-account-id 12345  --repo test"
 func (m *DefDevIo) Publish(ctx context.Context, source *dagger.Directory, appSources []*dagger.File, awsCredentials *dagger.File, region string, awsAccountId string, repo string) (string, error) {
 	ctr := m.Build(source, appSources)
-	return m.EcrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
+	return m.ecrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
 }
 
+// example usage: "build --source . --app-sources ~/foo.html,~/bar,js"
 func (m *DefDevIo) Build(source *dagger.Directory, appSources []*dagger.File) *dagger.Container {
-	build := m.BuildEnv(source).
+	build := m.buildEnv(source).
 		WithExec([]string{"go", "build", "-o", "lambda-emailer"}).
 		Directory("/src")
 	return dag.Container().From("alpine").
@@ -37,7 +39,7 @@ func (m *DefDevIo) Build(source *dagger.Directory, appSources []*dagger.File) *d
 		WithEntrypoint([]string{"/app/lambda-emailer"})
 }
 
-func (m *DefDevIo) BuildEnv(source *dagger.Directory) *dagger.Container {
+func (m *DefDevIo) buildEnv(source *dagger.Directory) *dagger.Container {
 	goCache := dag.CacheVolume("go")
 	return dag.Container().
 		From("golang:alpine").
@@ -48,8 +50,8 @@ func (m *DefDevIo) BuildEnv(source *dagger.Directory) *dagger.Container {
 }
 
 // example usage: "dagger call get-secret --aws-credentials ~/.aws/credentials"
-func (m *DefDevIo) GetSecret(ctx context.Context, awsCredentials *dagger.File) (string, error) {
-	ctr, err := m.WithAwsSecret(ctx, dag.Container().From("ubuntu:latest"), awsCredentials)
+func (m *DefDevIo) getSecret(ctx context.Context, awsCredentials *dagger.File) (string, error) {
+	ctr, err := m.withAwsSecret(ctx, dag.Container().From("ubuntu:latest"), awsCredentials)
 	if err != nil {
 		return "", err
 	}
@@ -58,7 +60,7 @@ func (m *DefDevIo) GetSecret(ctx context.Context, awsCredentials *dagger.File) (
 		Stdout(ctx)
 }
 
-func (m *DefDevIo) WithAwsSecret(ctx context.Context, ctr *dagger.Container, awsCredentials *dagger.File) (*dagger.Container, error) {
+func (m *DefDevIo) withAwsSecret(ctx context.Context, ctr *dagger.Container, awsCredentials *dagger.File) (*dagger.Container, error) {
 	credsFile, err := awsCredentials.Contents(ctx)
 	if err != nil {
 		return nil, err
@@ -67,20 +69,18 @@ func (m *DefDevIo) WithAwsSecret(ctx context.Context, ctr *dagger.Container, aws
 	return ctr.WithMountedSecret("/root/.aws/credentials", secret), nil
 }
 
-func (m *DefDevIo) AwsCli(ctx context.Context, awsCredentials *dagger.File) (*dagger.Container, error) {
+func (m *DefDevIo) awsCli(ctx context.Context, awsCredentials *dagger.File) (*dagger.Container, error) {
 	ctr := dag.Container().
 		From("public.ecr.aws/aws-cli/aws-cli:latest")
-	ctr, err := m.WithAwsSecret(ctx, ctr, awsCredentials)
+	ctr, err := m.withAwsSecret(ctx, ctr, awsCredentials)
 	if err != nil {
 		return nil, err
 	}
 	return ctr, nil
 }
 
-// example usage: "dagger call ecr-push --region us-east-1 --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
-func (m *DefDevIo) EcrPush(ctx context.Context, awsCredentials *dagger.File, region, awsAccountId, repo string, pushCtr *dagger.Container) (string, error) {
-	// Get the ECR login password so we can authenticate with Publish WithRegistryAuth
-	ctr, err := m.AwsCli(ctx, awsCredentials)
+func (m *DefDevIo) ecrPush(ctx context.Context, awsCredentials *dagger.File, region, awsAccountId, repo string, pushCtr *dagger.Container) (string, error) {
+	ctr, err := m.awsCli(ctx, awsCredentials)
 	if err != nil {
 		return "", err
 	}
