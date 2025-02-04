@@ -34,7 +34,7 @@ type Email struct {
 	PreferredCloudProvider string `json:"preferredCloudProvider"`
 }
 
-func handleRequest(ctx context.Context, event json.RawMessage) error {
+func handler(ctx context.Context, event json.RawMessage) error {
 	var email Email
 	if err := json.Unmarshal(event, &email); err != nil {
 		log.Printf("failed to unmarshal event: %v", err)
@@ -86,5 +86,5 @@ func handleRequest(ctx context.Context, event json.RawMessage) error {
 }
 
 func main() {
-	lambda.Start(handleRequest)
+	lambda.Start(handler)
 }

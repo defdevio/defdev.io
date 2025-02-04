@@ -26,21 +26,84 @@ type DefDevIo struct {
 	Actions []string
 }
 
-// example usage: "publish --source . --app-sources ~/foo.html,~/bar.js --aws-credentials ~/.aws/credentials --aws-account-id 12345  --repo test"
-func (m *DefDevIo) Publish(ctx context.Context, source *dagger.Directory, appSources []*dagger.File, awsCredentials *dagger.File, region string, awsAccountId string, repo string) (string, error) {
-	ctr := m.Build(source, appSources)
-	return m.ecrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
+// example usage: "publish --source . --app-sources ~/foo.html,~/bar.js --app-sources-destination /app/ --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
+func (m *DefDevIo) Publish(
+	ctx context.Context,
+	// AWS Lambda source code directory to copy to container
+	// +optional
+	source *dagger.Directory,
+	// Additional app source files as a comma separated list to copy to the container
+	// +optional
+	appSources []*dagger.File,
+	// Destination path for the additional app source files
+	// +optional
+	appSourcesDestination string,
+	// Path to the AWS credentials file to copy to the container as a Dagger secret
+	awsCredentials *dagger.File,
+	// AWS region to deploy the ECR image
+	region string,
+	// Name of the AWS Lambda function container to build
+	functionName string,
+	// AWS account id for the ECR
+	awsAccountId string,
+	// Destination AWS ECR repo. For example: defdevio/lambda-emailer
+	repo string,
+) (string, error) {
+	ctr := m.Build(appSources, appSourcesDestination, functionName, source)
+	newImageUri, err := m.ecrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
+	if err != nil {
+		return "", err
+	}
+
+	return m.updateLambdaFunctionCode(ctx, awsCredentials, region, functionName, newImageUri)
 }
 
-// example usage: "build --source . --app-sources ~/foo.html,~/bar,js"
-func (m *DefDevIo) Build(source *dagger.Directory, appSources []*dagger.File) *dagger.Container {
+// example usage: "build --source . --app-sources "./foo.html,~/bar.js" --app-sources-destination "/app/mjml" function-name "example"
+func (m *DefDevIo) Build(
+	// Additional app source files as a comma separated list to copy to the container
+	// +optional
+	appSources []*dagger.File,
+	// Destination path for the additional app source files
+	// +optional
+	appSourcesDestination string,
+	// Name of the AWS Lambda function container to build
+	functionName string,
+	// AWS Lambda source code directory to copy to container
+	source *dagger.Directory,
+) *dagger.Container {
+	function := fmt.Sprintf("lambda-%s", functionName)
 	build := m.buildEnv(source).
-		WithExec([]string{"go", "build", "-o", "lambda-emailer"}).
+		WithExec([]string{"go", "build", "-o", function}).
 		Directory("/src")
-	return dag.Container().From("alpine").
-		WithDirectory("/app", build).
-		WithFiles("/app/mjml/", appSources).
-		WithEntrypoint([]string{"/app/lambda-emailer"})
+	final := dag.Container().From("alpine").
+		WithDirectory("/app", build)
+
+	if len(appSources) > 0 {
+		final = final.WithFiles(appSourcesDestination, appSources)
+	}
+
+	return final.WithEntrypoint([]string{fmt.Sprintf("/app/%s", function)})
+}
+
+func (m *DefDevIo) updateLambdaFunctionCode(ctx context.Context, awsCredentials *dagger.File, region string, functionName string, newImageUri string) (string, error) {
+	ctr, err := m.awsCli(ctx, awsCredentials)
+	if err != nil {
+		return "", err
+	}
+
+	lambda := ctr.WithExec([]string{
+		"aws",
+		"lambda",
+		"update-function-code",
+		"--function-name",
+		functionName,
+		"--image-uri",
+		newImageUri,
+		"--region",
+		region,
+	})
+
+	return lambda.Stdout(ctx)
 }
 
 func (m *DefDevIo) buildEnv(source *dagger.Directory) *dagger.Container {

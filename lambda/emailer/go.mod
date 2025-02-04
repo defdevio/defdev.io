@@ -1,4 +1,4 @@
-module github.com/defdevio/defdev.io/v2
+module github.com/defdevio/defdev.io/emailer
 
 go 1.23.5
 

@@ -132,12 +132,10 @@ func (m *DefDevIo) AutoApply(ctx context.Context) *dagger.File {
 }
 
 func (m *DefDevIo) TerraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {
-	terraCache := dag.CacheVolume("terraform")
 	ctr := dag.Container().
 		From(fmt.Sprintf("hashicorp/terraform:%s", terraformVersion)).
 		WithMountedDirectory("/mnt", directory).
 		WithDirectory("/src", appSource).
-		WithMountedCache("/mnt/.terraform", terraCache).
 		WithWorkdir("/mnt")
 
 	ctr, err := m.withAwsSecret(context.TODO(), ctr, awsCredentials)
