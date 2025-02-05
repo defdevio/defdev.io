@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"dagger/def-dev-io/internal/dagger"
-	"encoding/json"
 	"fmt"
-	"slices"
 )
 
 func (m *DefDevIo) TerraformPlan(
@@ -23,6 +21,7 @@ func (m *DefDevIo) TerraformPlan(
 	terraformVersion string,
 	awsCredentials *dagger.File,
 	appSource *dagger.Directory,
+	tfVarFile string,
 ) *DefDevIo {
 	ctr, err := m.TerraformContainer(directory, terraformVersion, awsCredentials, appSource)
 	if err != nil {
@@ -37,8 +36,7 @@ func (m *DefDevIo) TerraformPlan(
 	plan := init.WithExec([]string{
 		"terraform",
 		"plan",
-		"-out", planOutput,
-		"-json",
+		"-var-file", tfVarFile,
 	})
 
 	_, err = plan.Stderr(ctx)
@@ -47,41 +45,41 @@ func (m *DefDevIo) TerraformPlan(
 		return nil
 	}
 
-	show := plan.WithExec([]string{
-		"terraform",
-		"show",
-		"-no-color",
-		"-json", planOutput,
-	})
+	// show := plan.WithExec([]string{
+	// 	"terraform",
+	// 	"show",
+	// 	"-no-color",
+	// 	"-json", planOutput,
+	// })
 
-	output, err := show.Stdout(ctx)
-	if err != nil {
-		println(err)
-		return nil
-	}
+	// output, err := show.Stdout(ctx)
+	// if err != nil {
+	// 	println(err)
+	// 	return nil
+	// }
 
-	var tfPlan TerraformPlan
-	err = json.Unmarshal([]byte(output), &tfPlan)
-	if err != nil {
-		println(err)
-		return nil
-	}
+	// var tfPlan TerraformPlan
+	// err = json.Unmarshal([]byte(output), &tfPlan)
+	// if err != nil {
+	// 	println(err)
+	// 	return nil
+	// }
 
-	var deleteActions []string
-	if len(tfPlan.ResourceChanges) > 0 {
-		for _, resourceChanges := range tfPlan.ResourceChanges {
-			for _, changeAction := range resourceChanges.Change.Actions {
-				if changeAction == "delete" {
-					deleteActions = append(deleteActions, changeAction)
-				}
-			}
-		}
-	}
+	// var deleteActions []string
+	// if len(tfPlan.ResourceChanges) > 0 {
+	// 	for _, resourceChanges := range tfPlan.ResourceChanges {
+	// 		for _, changeAction := range resourceChanges.Change.Actions {
+	// 			if changeAction == "delete" {
+	// 				deleteActions = append(deleteActions, changeAction)
+	// 			}
+	// 		}
+	// 	}
+	// }
 
-	if slices.Contains(deleteActions, "delete") {
-		m.Actions = deleteActions
-		return &DefDevIo{Plan: nil}
-	}
+	// if slices.Contains(deleteActions, "delete") {
+	// 	m.Actions = deleteActions
+	// 	return &DefDevIo{Plan: nil}
+	// }
 
 	return &DefDevIo{Plan: plan}
 }
@@ -120,15 +118,19 @@ func (m *DefDevIo) TerraformSpecPlan(
 	return plan.Stdout(ctx)
 }
 
-func (m *DefDevIo) AutoApply(ctx context.Context) *dagger.File {
-	apply := m.Plan.WithExec([]string{
-		"terraform",
-		"apply",
-		"-auto-approve",
-		"-state-out", "terraform.tfstate",
-	})
+func (m *DefDevIo) AutoApply(ctx context.Context, tfVarFile string) (string, error) {
+	if m.Plan != nil {
+		apply := m.Plan.WithExec([]string{
+			"terraform",
+			"apply",
+			"-var-file", tfVarFile,
+			"-auto-approve",
+		})
 
-	return apply.File("./terraform.tfstate")
+		return apply.Stdout(ctx)
+	}
+
+	return "", fmt.Errorf("errors were present: canceling auto apply")
 }
 
 func (m *DefDevIo) TerraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {
