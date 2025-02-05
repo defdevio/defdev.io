@@ -48,6 +48,10 @@ func (m *DefDevIo) Publish(
 	awsAccountId string,
 	// Destination AWS ECR repo. For example: defdevio/lambda-emailer
 	repo string,
+	// Update the Lambda Function code
+	// +optional
+	// +default=false
+	updateLambda bool,
 ) (string, error) {
 	ctr := m.Build(appSources, appSourcesDestination, functionName, source)
 	newImageUri, err := m.ecrPush(ctx, awsCredentials, region, awsAccountId, repo, ctr)
@@ -55,7 +59,11 @@ func (m *DefDevIo) Publish(
 		return "", err
 	}
 
-	return m.updateLambdaFunctionCode(ctx, awsCredentials, region, functionName, newImageUri)
+	if updateLambda {
+		return m.updateLambdaFunctionCode(ctx, awsCredentials, region, functionName, newImageUri)
+	}
+
+	return newImageUri, nil
 }
 
 // example usage: "build --source . --app-sources "./foo.html,~/bar.js" --app-sources-destination "/app/mjml" function-name "example"

@@ -1,4 +1,14 @@
 lambda_functions = {
+  cloudflare_turnstile_validator = {
+    spec = {
+      description = "Handles validation of the CloudFlare turnstile"
+      timeout     = 60
+      ecr = {
+        is_immutable = false
+        image_tag    = "latest"
+      }
+    }
+  }
   emailer = {
     spec = {
       description = "Handles the Contact Us form for defdev.io"
