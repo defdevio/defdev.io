@@ -19,7 +19,12 @@ import (
 )
 
 type Event struct {
-	CfTurnstileResponse string `json:"cf-turnstile-response"`
+	ClientName             string `json:"clientName"`
+	EmailAddress           string `json:"emailAddress"`
+	PhoneNumber            string `json:"phoneNumber,omitempty"`
+	ProjectDescription     string `json:"projectDescription"`
+	PreferredCloudProvider string `json:"preferredCloudProvider"`
+	CfTurnstileResponse    string `json:"cf-turnstile-response"`
 }
 
 type CfTurnstileRequest struct {
@@ -156,11 +161,11 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 
 		if cfTurnstileResponse.Success {
 			email := &Email{
-				ClientName:             "Microsoft",
-				EmailAddress:           "bill.gates@microsoft.com",
-				PhoneNumber:            "867-5309",
-				ProjectDescription:     "We love what you guys are doing in the cloud!",
-				PreferredCloudProvider: "AWS",
+				ClientName:             handlerEvent.ClientName,
+				EmailAddress:           handlerEvent.EmailAddress,
+				PhoneNumber:            handlerEvent.PhoneNumber,
+				ProjectDescription:     handlerEvent.ProjectDescription,
+				PreferredCloudProvider: handlerEvent.PreferredCloudProvider,
 			}
 
 			emailPayload, err := json.Marshal(email)

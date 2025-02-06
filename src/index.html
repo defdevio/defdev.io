@@ -148,18 +148,18 @@
             <div class="modal-body">
               <div class="mb-3">
                 <label for="clientName" class="form-label">Name:</label>
-                <input class="form-control" id="clientName" type="text">
+                <input class="form-control" id="clientName" name="clientName" type="text">
               </div>
               <div class="mb-3">
                 <label for="clientEmailAddress" class="form-label">Email address:</label>
-                <input type="email" class="form-control" id="clientEmailAddress" placeholder="name@example.com">
+                <input type="email" class="form-control" id="clientEmailAddress" name="emailAddress" placeholder="name@example.com">
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">Provide a brief description of your project:</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
+                <textarea class="form-control" id="description" name="projectDescription" rows="3"></textarea>
               </div>
               <label for="cloudProviders" class="form-label">Who is your preferred cloud provider?</label>
-                <input class="form-control" list="datalistOptions" id="cloudProviders" placeholder="Click to choose or type to search...">
+                <input class="form-control" list="datalistOptions" id="cloudProviders" name="preferredCloudProvider" placeholder="Click to choose or type to search...">
                 <datalist id="datalistOptions">
                   <option value="AWS">
                   <option value="Azure">
