@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "lambda" {
 
 resource "aws_iam_role" "lambda" {
   for_each           = var.lambda_functions
-  name               = "lambda-execution-${each.key}"
+  name               = "lambda-execution-${replace(each.key, "_", "-")}"
   assume_role_policy = data.aws_iam_policy_document.lambda.json
 }
 

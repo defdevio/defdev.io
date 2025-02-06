@@ -9,3 +9,10 @@ module "lambda_functions" {
   image_uri             = "${module.ecr[each.key].repo_url}:${each.value.spec.ecr.image_tag}"
   timeout               = each.value.spec.timeout
 }
+
+resource "aws_lambda_permission" "cloudflare_validator" {
+  statement_id  = "AllowExecutionFromCloudFlareValidator"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_functions["emailer"].function_name
+  principal     = aws_iam_role.lambda["cloudflare_turnstile_validator"].arn
+}

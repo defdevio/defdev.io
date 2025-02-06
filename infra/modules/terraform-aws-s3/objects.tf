@@ -3,6 +3,7 @@ locals {
     css  = "text/css"
     html = "text/html"
     jpeg = "image/jpeg"
+    js = "text/javascript"
     json = "application/json"
     map  = "text/css"
     png  = "image/png"

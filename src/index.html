@@ -144,7 +144,7 @@
             <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact Us</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form>
+          <form id="contact">
             <div class="modal-body">
               <div class="mb-3">
                 <label for="clientName" class="form-label">Name:</label>
@@ -172,11 +172,10 @@
             </div>
             <div class="modal-footer">
                 <div>
-                  <div class="cf-turnstile mx-auto d-block" data-sitekey="0x4AAAAAAA7Pk3U2XtAtjzfI"></div>
+                  <div class="cf-turnstile" data-size="flexible" data-sitekey="0x4AAAAAAA7Pk3U2XtAtjzfI"></div>
                 </div>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-purple">Submit</button>
-              </form>
+                <button type="submit" class="btn btn-purple">Submit</button>
             </div>        
           </form>
         </div>
@@ -369,4 +368,5 @@
     </footer>
   </main>
 </body>
+<script src="./js/contact.js"></script>
 </html>
