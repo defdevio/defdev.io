@@ -11,8 +11,8 @@ locals {
     status            = "$context.status"
     protocol          = "$context.protocol"
     responseLength    = "$context.responseLength"
-    authError = "$context.authorize.error"
-    errorMessage = "$context.error.message"
+    authError         = "$context.authorize.error"
+    errorMessage      = "$context.error.message"
   }
 }
 
@@ -72,10 +72,10 @@ resource "aws_api_gateway_stage" "lambda_proxy" {
   }
 
   lifecycle {
-    ignore_changes = [ deployment_id ]
+    ignore_changes = [deployment_id]
   }
 
-  depends_on = [ 
-    aws_api_gateway_account.cloudwatch_apigw 
+  depends_on = [
+    aws_api_gateway_account.cloudwatch_apigw
   ]
 }
