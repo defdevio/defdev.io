@@ -45,7 +45,3 @@ form.addEventListener('submit', async(event) => {
         errorBtn.style.display = 'inline-block';
     }
 })
-
-function ValidateForm() {
-
-}
