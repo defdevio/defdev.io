@@ -45,42 +45,6 @@ func (m *DefDevIo) TerraformPlan(
 		return nil
 	}
 
-	// show := plan.WithExec([]string{
-	// 	"terraform",
-	// 	"show",
-	// 	"-no-color",
-	// 	"-json", planOutput,
-	// })
-
-	// output, err := show.Stdout(ctx)
-	// if err != nil {
-	// 	println(err)
-	// 	return nil
-	// }
-
-	// var tfPlan TerraformPlan
-	// err = json.Unmarshal([]byte(output), &tfPlan)
-	// if err != nil {
-	// 	println(err)
-	// 	return nil
-	// }
-
-	// var deleteActions []string
-	// if len(tfPlan.ResourceChanges) > 0 {
-	// 	for _, resourceChanges := range tfPlan.ResourceChanges {
-	// 		for _, changeAction := range resourceChanges.Change.Actions {
-	// 			if changeAction == "delete" {
-	// 				deleteActions = append(deleteActions, changeAction)
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// if slices.Contains(deleteActions, "delete") {
-	// 	m.Actions = deleteActions
-	// 	return &DefDevIo{Plan: nil}
-	// }
-
 	return &DefDevIo{Plan: plan}
 }
 
@@ -111,8 +75,7 @@ func (m *DefDevIo) TerraformSpecPlan(
 	plan := init.WithExec([]string{
 		"terraform",
 		"plan",
-		"-var-file",
-		tfVarFile,
+		"-var-file", tfVarFile,
 	})
 
 	return plan.Stdout(ctx)

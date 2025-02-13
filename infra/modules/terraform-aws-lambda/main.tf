@@ -7,4 +7,8 @@ resource "aws_lambda_function" "this" {
   reserved_concurrent_executions = var.concurrent_executions
   role                           = var.iam_role_arn
   timeout                        = var.timeout
+
+  lifecycle {
+    ignore_changes = [image_uri]
+  }
 }

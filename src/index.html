@@ -136,30 +136,34 @@
     </div>
     <!--/END HERO -->
     
-    <!-- START MODAL -->
+    <!-- START CONTACT MODAL -->
     <div class="modal fade" id="contactForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact Us</h1>
+            <h1 class="modal-title fs-5" id="modal-header">Contact Us</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form>
-            <div class="modal-body">
+          <form id="contact" class="needs-validation">
+            <div class="modal-body" id="modal-form">
               <div class="mb-3">
-                <label for="clientName" class="form-label">Name:</label>
-                <input class="form-control" id="clientName" type="text">
+                <label for="clientName" class="form-label">Company name:</label>
+                <input class="form-control" id="clientName" name="clientName" type="text" required>
+              </div>
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone number:</label>
+                <input class="form-control" id="phoneNumber" name="phoneNumber" type="text" required>
               </div>
               <div class="mb-3">
                 <label for="clientEmailAddress" class="form-label">Email address:</label>
-                <input type="email" class="form-control" id="clientEmailAddress" placeholder="name@example.com">
+                <input type="email" class="form-control" id="clientEmailAddress" name="emailAddress" placeholder="name@example.com" required>
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">Provide a brief description of your project:</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
+                <textarea class="form-control" id="description" name="projectDescription" rows="4" required></textarea>
               </div>
               <label for="cloudProviders" class="form-label">Who is your preferred cloud provider?</label>
-                <input class="form-control" list="datalistOptions" id="cloudProviders" placeholder="Click to choose or type to search...">
+                <input class="form-control" list="datalistOptions" id="cloudProviders" name="preferredCloudProvider" placeholder="Click to choose or type to search..." required>
                 <datalist id="datalistOptions">
                   <option value="AWS">
                   <option value="Azure">
@@ -170,18 +174,51 @@
                   <option value="No preference"></option>
                 </datalist>
             </div>
+            <div class="modal-body" style="display: none;" id="success-email">
+              <div class="text-center p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="50%" width="50%" class="bi bi-send-check-fill" viewBox="0 0 16 16">
+                  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+                  <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686"/>
+                </svg>
+              </div>
+              <div class="p-3">
+                <p> 
+                  We want to take a moment to say we appreciate that you chose <span class="text-purple-300">DefDev</span>
+                  for your next project! Someone will be reaching out to you shortly to discuss the next steps.
+                  We look forward to serving your technology needs! 
+                </p>
+              </div>
+            </div>
             <div class="modal-footer">
                 <div>
-                  <div class="cf-turnstile mx-auto d-block" data-sitekey="0x4AAAAAAA7Pk3U2XtAtjzfI"></div>
+                  <div class="cf-turnstile" data-size="flexible" data-sitekey="0x4AAAAAAA7Pk3U2XtAtjzfI" id="cf-turnstile"></div>
                 </div>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-purple">Submit</button>
-              </form>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="contact-close-btn">Close</button>
+                <button type="submit" class="btn btn-purple" id="submit-btn">Submit</button>
+                <button type="button" class="btn btn-success" style="display: none;" id="success-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                  </svg>
+                  Success
+                </button>
+                <button type="button" class="btn btn-danger" style="display: none;" id="error-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond-fill" viewBox="0 0 16 16">
+                    <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
+                  </svg>
+                  Error sending
+                </button>
+                <button class="btn btn-purple" style="display: none;" type="button" disabled id="submit-send-btn">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span role="status">Sending...</span>
+                </button>
             </div>        
           </form>
         </div>
       </div>
     </div>
+    <!-- /END CONTACT MODAL -->
+
+    <!-- ABOUT MODAL -->
     <div class="modal fade" id="about" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -217,7 +254,115 @@
         </div>
       </div>
     </div>
-    <!-- /END MODAL -->
+    <!-- /END ABOUT MODAL -->
+
+    <!-- START PRIVACY AND TERMS MODAL -->
+    <div class="modal fade" id="terms-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="terms-header"></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="text-start p-3 lh-1">
+              <div id="privacy-policy" style="display: none;">
+                <p><strong>Effective Date:</strong> 02/01/2025</p>
+                <h5>1. Introduction</h5>
+                <p>Welcome to <span class="text-purple-300">DefDev</span> ("we," "our," "us"). 
+                  We are committed to protecting your privacy and ensuring that your personal information is handled in a safe 
+                  and responsible manner. This Privacy Policy outlines how we collect, use, and protect your information 
+                  when you visit our website <span class="text-purple-300">defdev.io</span> (the "Site").</p>
+                <h5>2. Information We Collect</h5>
+                <p>We may collect the following types of information:</p>
+                <ul>
+                    <li>Personal Information: Name, email address, phone number, and other contact details.</li>
+                    <li>Usage Data: Information about how you use our Site, such as your IP address, browser type, and pages visited.</li>
+                </ul>
+                <h5>3. How We Use Your Information</h5>
+                <p>We use your information to:</p>
+                <ul>
+                    <li>Provide and improve our services.</li>
+                    <li>Communicate with you about our services, promotions, and updates.</li>
+                    <li>Analyze usage patterns to enhance user experience.</li>
+                </ul>
+                <h5>4. Sharing Your Information</h5>
+                <p>
+                  We do not sell, trade, or otherwise transfer your personal information to outside parties except as described 
+                  in this Privacy Policy. We may share your information with trusted third parties who assist us in operating our 
+                  Site and conducting our business.
+                </p>
+                <h5>5. Security</h5>
+                <p>
+                  We implement a variety of security measures to maintain the safety of your personal information. 
+                  However, no method of transmission over the internet or electronic storage is 100% secure.
+                </p>
+                <h5>6. Your Rights</h5>
+                <p>
+                  You have the right to access, correct, or delete your personal information. To exercise these rights, 
+                  please contact us at <a class="text-purple-300" href="mailto:inquires@defdev.io">inquiries@defdev.io</a>
+                </p>
+                <h5>7. Changes to This Privacy Policy</h5>
+                <p>We may update this Privacy Policy from time to time. 
+                  We will notify you of any changes by posting the new Privacy Policy on our Site.
+                </p>
+                <h5>8. Contact Us</h5>
+                <p>If you have any questions about this Privacy Policy, please contact us at 
+                  <a class="text-purple-300" href="mailto:inquires@defdev.io">inquiries@defdev.io</a>
+                </p>
+              </div>
+          
+              <div id="terms-and-conditions" style="display: none;">
+                <p><strong>Effective Date:</strong> 02/01/2025</p>
+                <h5>1. Introduction</h5>
+                <p>
+                    Welcome to <span class="text-purple-300">DefDev</span> ("we," "our," "us"). 
+                    These Terms and Conditions ("Terms") govern your use of our website <span class="text-purple-300">defdev.io</span> (the "Site"). 
+                    By accessing or using our Site, you agree to be bound by these Terms.</p>
+                <h5>2. Services</h5>
+                <p>
+                    We provide consultancy services as described on our Site. 
+                    The specific terms of our services will be outlined in separate agreements with our clients.
+                </p>
+                <h5>3. Use of the Site</h5>
+                <p>
+                    You agree to use our Site only for lawful purposes and in a way that does not infringe the rights of, restrict, 
+                    or inhibit anyone else's use and enjoyment of the Site
+                </p>
+                <h5>4. Intellectual Property</h5>
+                <p>
+                    All content on our Site, including text, graphics, logos, and images, is the property of 
+                    <span class="text-purple-300">DefDev</span> or its content suppliers and is protected by intellectual property laws.
+                </p>
+                <h5>5. Limitation of Liability</h5>
+                <p>
+                    We are not liable for any direct, indirect, incidental, or consequential damages arising out of your use of our Site. 
+                    This includes, but is not limited to, damages for loss of profits, data, or other intangible losses.
+                </p>
+                <h5>6. Governing Law</h5>
+                <p>These Terms are governed by and construed in accordance with the laws of <span class="text-purple-300">the State of California</span>. 
+                    Any disputes arising under these Terms shall be subject to the exclusive 
+                    jurisdiction of the courts of <span class="text-purple-300">the State of California</span>.
+                </p>
+                <h5>7. Changes to These Terms</h5>
+                <p>
+                    We may update these Terms from time to time. We will notify you of any changes by posting the new Terms on our Site.
+                </p>
+                <h5>8. Contact Us</h5>
+                <p>
+                    If you have any questions about these Terms, please contact us at 
+                    <a class="text-purple-300" href="mailto:inquires@defdev.io">inquiries@defdev.io</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-purple" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /END PRIVACY AND TERMS MODAL -->
 
     <!-- START CAROUSEL -->
     <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
@@ -312,6 +457,27 @@
     <!-- START FEATURETTES -->
     <div class="container marketing-padding">
       <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading fw-normal lh-1">This site operates on native <span class="text-purple-300">AWS</span> technology</h2>
+          <p class="lead">
+            We use <span class="text-purple-300">S3 Static Website</span> and <span class="text-purple-300">CloudFront</span> for asset distribution. 
+            With <span class="text-purple-300">API Gateway</span>, <span class="text-purple-300">Lambda Functions</span>, and 
+            <span class="text-purple-300">Simple Email Service</span> we run a low-cost, secure, serverless site, fully
+            automated with <span class="text-purple-300">Dagger</span> and <span class="text-purple-300">Terraform</span> modules. 
+            You can check out all the code used to make this site here! <a class="text-purple-300" href="https://github.com/defdevio/defdev.io">github.com/defdevio/defdev.io</a>
+          </p>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <!-- draw.io diagram -->
+          <div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;lightbox&quot;:false,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;dark-mode&quot;:&quot;light&quot;,&quot;toolbar&quot;:&quot;zoom layers tags&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; agent=\&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\&quot; version=\&quot;26.0.11\&quot;&gt;\n  &lt;diagram name=\&quot;Page-1\&quot; id=\&quot;aaaa8250-4180-3840-79b5-4cada1eebb92\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;2170\&quot; dy=\&quot;1266\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;850\&quot; pageHeight=\&quot;1100\&quot; background=\&quot;none\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-11\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.dashedArrowlessEdge2;strokeColor=#A88DD9;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;838\&quot; y=\&quot;571.39\&quot; width=\&quot;892.9\&quot; height=\&quot;508.61\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-56\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;1\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1080\&quot; y=\&quot;834\&quot; width=\&quot;325\&quot; height=\&quot;182\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-52\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-56\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;197.76999999999998\&quot; height=\&quot;115\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-42\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-52\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;60\&quot; y=\&quot;35\&quot; width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-41\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-52\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-57\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-52\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;-249\&quot; y=\&quot;-145.77999999999997\&quot; width=\&quot;355\&quot; height=\&quot;217.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-58\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-57\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;197.76999999999998\&quot; height=\&quot;115\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-59\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-58\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;60\&quot; y=\&quot;35\&quot; width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-60\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-58\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-11\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.lambda;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-58\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry y=\&quot;-50\&quot; width=\&quot;92\&quot; height=\&quot;109.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-61\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-57\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;125.23000000000002\&quot; y=\&quot;73\&quot; width=\&quot;229.76999999999998\&quot; height=\&quot;144.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-62\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-61\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;60\&quot; y=\&quot;35\&quot; width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-63\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-61\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-22\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.lambda;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-61\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;137.76999999999998\&quot; y=\&quot;27\&quot; width=\&quot;92\&quot; height=\&quot;109.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-4\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowSE;fillColor=#FFFFFF;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-61\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;-32.230000000000004\&quot; y=\&quot;-16.22\&quot; width=\&quot;142.14\&quot; height=\&quot;81.22\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-53\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-56\&quot; connectable=\&quot;0\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;125.23000000000002\&quot; y=\&quot;73\&quot; width=\&quot;199.76999999999998\&quot; height=\&quot;109\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-54\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-53\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;60\&quot; y=\&quot;35\&quot; width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-55\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-53\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-14\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.email;aspect=fixed;strokeColor=#292929;\&quot; parent=\&quot;plL8LCQWVz7tZ8a8Fwvz-53\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;47.76999999999998\&quot; width=\&quot;43\&quot; height=\&quot;56.99999999999999\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-95\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowNE;fillColor=#FFFFFF;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1480\&quot; y=\&quot;903.52\&quot; width=\&quot;210.88\&quot; height=\&quot;120.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-30\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowNE;fillColor=#FFFFFF;aspect=fixed;strokeColor=light-dark(#000000, #121212);\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;430\&quot; y=\&quot;1304\&quot; width=\&quot;103.21\&quot; height=\&quot;58.98\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-86\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.spot2;fillColor=#F4B934;strokeColor=none;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1321\&quot; y=\&quot;974.27\&quot; width=\&quot;137.77\&quot; height=\&quot;80\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-23\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;dashed=0;shape=mxgraph.aws3d.flatDoubleEdge;fillColor=none;aspect=fixed;rounded=1;shadow=0;comic=0;fontFamily=Verdana;fontSize=12;flipV=1;strokeColor=none;gradientColor=none;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;570\&quot; y=\&quot;1120\&quot; width=\&quot;269.31\&quot; height=\&quot;153.59\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;1a8abee3a6cfdf20-28\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;dashed=0;shape=mxgraph.aws3d.flatDoubleEdge;fillColor=#000000;aspect=fixed;rounded=1;shadow=0;comic=0;fontFamily=Verdana;fontSize=12;flipV=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;260\&quot; y=\&quot;799\&quot; width=\&quot;492.71\&quot; height=\&quot;281\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;1a8abee3a6cfdf20-10\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;dashed=0;shape=mxgraph.aws3d.internetGateway;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;rounded=1;shadow=0;comic=0;fontSize=12;flipH=1;flipV=0;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1660\&quot; y=\&quot;812.37\&quot; width=\&quot;116.7\&quot; height=\&quot;102.8\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;1a8abee3a6cfdf20-1\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;dashed=0;shape=mxgraph.aws3d.secureConnection;fillColor=#000000;strokeColor=#ffffff;aspect=fixed;rounded=1;shadow=0;comic=0;fontSize=12\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;203\&quot; y=\&quot;1080\&quot; width=\&quot;56.99999999999999\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;1a8abee3a6cfdf20-2\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;dashed=0;shape=mxgraph.aws3d.secureConnection;fillColor=#000000;strokeColor=#ffffff;aspect=fixed;rounded=1;shadow=0;comic=0;fontSize=12\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;530\&quot; y=\&quot;1270\&quot; width=\&quot;56.99999999999999\&quot; height=\&quot;34\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-3\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.s3;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;670\&quot; y=\&quot;981\&quot; width=\&quot;231.5\&quot; height=\&quot;239\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-12\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.email_service;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1380\&quot; y=\&quot;915.17\&quot; width=\&quot;151.16\&quot; height=\&quot;192.2\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-1\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.cloudfront;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;319.7\&quot; y=\&quot;1250\&quot; width=\&quot;130.21\&quot; height=\&quot;213\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-91\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowNW;fillColor=#FFFFFF;aspect=fixed;strokeColor=light-dark(#000000,#EDEDED);\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;260\&quot; y=\&quot;1114.29\&quot; width=\&quot;272.51\&quot; height=\&quot;155.71\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;plL8LCQWVz7tZ8a8Fwvz-102\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.workflowService;fillColor=#ECECEC;strokeColor=#5E5E5E;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;415.26\&quot; y=\&quot;850.8\&quot; width=\&quot;182.20000000000002\&quot; height=\&quot;148.4\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-1\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowNE;fillColor=#FCFCFC;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;310\&quot; y=\&quot;980\&quot; width=\&quot;115.5\&quot; height=\&quot;66\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-3\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.arrowNE;fillColor=#FCFCFC;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;586\&quot; y=\&quot;826.77\&quot; width=\&quot;115.5\&quot; height=\&quot;66\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-6\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.dashedArrowlessEdge2;strokeColor=#A88DD9;aspect=fixed;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;615.46\&quot; y=\&quot;706\&quot; width=\&quot;895.34\&quot; height=\&quot;510\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-7\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.dashedArrowlessEdge2;strokeColor=#A88DD9;aspect=fixed;rotation=120;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1498\&quot; y=\&quot;1086.21\&quot; width=\&quot;227.85\&quot; height=\&quot;129.79\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;zLq3U8IVIOn__mGdfacb-12\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;strokeWidth=1;align=center;outlineConnect=0;dashed=0;outlineConnect=0;shape=mxgraph.aws3d.dashedArrowlessEdge2;strokeColor=#A88DD9;aspect=fixed;rotation=120;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;604\&quot; y=\&quot;571.39\&quot; width=\&quot;227.85\&quot; height=\&quot;129.79\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div>
+          <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
       <div class="row featurette">
         <div class="col-md-7">
           <h2 class="featurette-heading fw-normal lh-1">Say goodbye to <span class="text-purple-300">ClickOps</span></h2>
@@ -358,15 +524,16 @@
           <img src="img/heart_users.svg" class="rounded mx-auto d-block marketing-logo" fill="grey"></img>
         </div>
       </div>
-  
       <hr class="featurette-divider">
     </div>
     <!-- /END FEATURETTES -->
 
-    <footer class="container">
+    <footer class="container pt-3">
       <p class="float-end"><a class="text-purple-300" href="#">Back to top</a></p>
-      <p>© 2025 DefDev, LLC | <a class="text-purple-300" href="#">Privacy</a> | <a class="text-purple-300" href="#">Terms</a></p>
+      <p>© 2025 DefDev, LLC | <a class="text-purple-300" id="privacy-link" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#terms-modal">Privacy</a> | <a class="text-purple-300" id="terms-link" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#terms-modal">Terms</a></p>
     </footer>
   </main>
 </body>
+<script src="./js/contact.js"></script>
+<script src="./js/terms.js"></script>
 </html>
