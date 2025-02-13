@@ -52,7 +52,7 @@ type CfSecret struct {
 type Email struct {
 	ClientName             string `json:"clientName"`
 	EmailAddress           string `json:"emailAddress"`
-	PhoneNumber            string `json:"phoneNumber,omitempty"`
+	PhoneNumber            string `json:"phoneNumber"`
 	ProjectDescription     string `json:"projectDescription"`
 	PreferredCloudProvider string `json:"preferredCloudProvider"`
 }
@@ -84,6 +84,42 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	if err := json.Unmarshal([]byte(request.Body), &handlerEvent); err != nil {
 		log.Printf("failed to unmarshal event: %v", err)
 		return events.APIGatewayProxyResponse{}, err
+	}
+
+	if handlerEvent.CfTurnstileResponse == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
+	}
+
+	if handlerEvent.ClientName == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
+	}
+
+	if handlerEvent.PhoneNumber == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
+	}
+
+	if handlerEvent.EmailAddress == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
+	}
+
+	if handlerEvent.ProjectDescription == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
+	}
+
+	if handlerEvent.PreferredCloudProvider == "" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
 	}
 
 	ip := request.Headers["CF-Connecting-IP"]
@@ -188,7 +224,15 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			}
 
 			if resp.StatusCode == http.StatusOK {
-				return events.APIGatewayProxyResponse{Body: "success: email sent", StatusCode: http.StatusOK}, nil
+				return events.APIGatewayProxyResponse{
+					Body:       "",
+					StatusCode: http.StatusOK,
+					Headers: map[string]string{
+						"Access-Control-Allow-Headers": "Content-Type",
+						"Access-Control-Allow-Origin":  "https://www.defdev.io",
+						"Access-Control-Allow-Methods": "POST",
+					},
+				}, nil
 			}
 
 			return events.APIGatewayProxyResponse{StatusCode: http.StatusInternalServerError}, nil

@@ -18,6 +18,10 @@ locals {
 
 resource "aws_api_gateway_rest_api" "lambda_proxy" {
   name = var.lambda_proxy_name
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_resource" "lambda_proxy" {
@@ -67,5 +71,11 @@ resource "aws_api_gateway_stage" "lambda_proxy" {
     format          = jsonencode(local.log_format)
   }
 
-  depends_on = [ aws_api_gateway_account.cloudwatch_apigw ]
+  lifecycle {
+    ignore_changes = [ deployment_id ]
+  }
+
+  depends_on = [ 
+    aws_api_gateway_account.cloudwatch_apigw 
+  ]
 }
