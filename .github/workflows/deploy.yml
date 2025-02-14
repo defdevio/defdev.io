@@ -37,7 +37,6 @@ jobs:
         echo "aws_access_key_id = ${KEY_ID}" >> ~/.aws/credentials
         echo "aws_secret_access_key = ${SECRET_KEY}" >> ~/.aws/credentials
         echo "aws_session_token = ${SESSION_TOKEN}" >> ~/.aws/credentials
-        cat ~/.aws/credentials
     - name: Deploy CloudFlare turnstile lambda
       uses: dagger/dagger-for-github@v7
       with:
@@ -65,7 +64,7 @@ jobs:
           --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
           --aws-credentials="~/.aws/credentials"
           --function-name="emailer"
-          --region="${{ env.AWS_REGION }}""
+          --region="${{ env.AWS_REGION }}"
           --repo="defdevio/lambda-emailer"
           --source="./lambda/emailer"
         version: "0.15.3"
