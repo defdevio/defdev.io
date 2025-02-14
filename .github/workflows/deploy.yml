@@ -26,6 +26,10 @@ jobs:
         role-session-name: defdevio
         aws-region: ${{ env.AWS_REGION }}
         output-credentials: true
+    - name: Set credentials file
+      run: |
+        mkdir ~/.aws
+        echo ${{ steps.get-aws-creds.outputs.output-credentials }} >> ~/.aws/credentials
     - name: Deploy CloudFlare turnstile
       uses: dagger/dagger-for-github@v7
       with:
@@ -33,3 +37,7 @@ jobs:
         module: dagger
         args: publish --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}" --aws-credentials="~/.aws/credentials" --function-name="cloudflare-turnstile-validator" --region="${{ env.AWS_REGION }}" --repo="defdevio/lambda-cloudflare-turnstile-validator" --source="./lambda/cloudflare-turnstile-validator" --update-lambda
         version: "0.15.3"
+    - name:
+      if: always()
+      run: |
+        rm -rf ~/.aws
