@@ -28,8 +28,8 @@ jobs:
     - name: Deploy CloudFlare turnstile
       uses: dagger/dagger-for-github@v6
       with:
-        module: ./dagger
-        call: | 
+        verb: call 
+        args: | 
           publish --function-name cloudflare-turnstile-validator \
           --source ./lambda/cloudflare-turnstile-validator  \
           --aws-credentials ~/.aws/credentials \ 
