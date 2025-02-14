@@ -25,6 +25,7 @@ jobs:
         role-to-assume: arn:aws:iam::665848848438:role/defdevio-github-actions-role
         role-session-name: defdevio
         aws-region: ${{ env.AWS_REGION }}
+        output-credentials: true
     - name: Deploy CloudFlare turnstile
       uses: dagger/dagger-for-github@v7
       with:
