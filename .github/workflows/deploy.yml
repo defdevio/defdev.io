@@ -37,3 +37,4 @@ jobs:
           --aws-account-id ${{ steps.get-aws-creds.outputs.aws-account-id }} \
           --repo defdevio/lambda-cloudflare-turnstile-validator \
           --update-lambda
+        version: "0.15.3"
