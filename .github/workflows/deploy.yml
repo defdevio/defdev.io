@@ -1,0 +1,27 @@
+name: deploy-defdevio
+
+on:
+  push:
+    branches:
+    - main
+
+env:
+  AWS_REGION: us-west-2
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+      with:
+        role-to-assume: defdevio-github-actions-role
+        role-session-name: defdevio
+        aws-region: ${{ env.AWS_REGION }}
+    - name: s3 list
+      run: |
+        aws s3 ls
