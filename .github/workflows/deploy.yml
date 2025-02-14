@@ -29,14 +29,14 @@ jobs:
       uses: dagger/dagger-for-github@v7
       with:
         verb: call
-        module: ./dagger
-        args: >
-          publish 
-          --function-name="cloudflare-turnstile-validator"
-          --source="./lambda/cloudflare-turnstile-validator"
-          --aws-credentials="~/.aws/credentials"
-          --region="${{ env.AWS_REGION }}"
-          --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
-          --repo="defdevio/lambda-cloudflare-turnstile-validator"
-          --update-lambda
+        module: dagger
+        # args: >
+        #   publish
+        #   --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
+        #   --aws-credentials="~/.aws/credentials"
+        #   --function-name="cloudflare-turnstile-validator"
+        #   --region="${{ env.AWS_REGION }}"
+        #   --repo="defdevio/lambda-cloudflare-turnstile-validator"
+        #   --source="./lambda/cloudflare-turnstile-validator"
+        #   --update-lambda
         version: "0.15.3"
