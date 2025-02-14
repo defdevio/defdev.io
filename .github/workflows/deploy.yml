@@ -35,7 +35,15 @@ jobs:
       with:
         verb: call
         module: dagger
-        args: publish --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}" --aws-credentials="~/.aws/credentials" --function-name="cloudflare-turnstile-validator" --region="${{ env.AWS_REGION }}" --repo="defdevio/lambda-cloudflare-turnstile-validator" --source="./lambda/cloudflare-turnstile-validator" --update-lambda
+        args: >-
+          publish 
+          --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}" 
+          --aws-credentials="~/.aws/credentials" 
+          --function-name="cloudflare-turnstile-validator" 
+          --region="${{ env.AWS_REGION }}" 
+          --repo="defdevio/lambda-cloudflare-turnstile-validator" 
+          --source="./lambda/cloudflare-turnstile-validator" 
+          --update-lambda
         version: "0.15.3"
     - name:
       if: always()
