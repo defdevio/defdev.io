@@ -30,7 +30,7 @@ jobs:
       with:
         module: ./dagger
         call: | 
-          dagger call publish --function-name cloudflare-turnstile-validator \
+          publish --function-name cloudflare-turnstile-validator \
           --source ./lambda/cloudflare-turnstile-validator  \
           --aws-credentials ~/.aws/credentials \ 
           --region ${{ env.AWS_REGION }} \
