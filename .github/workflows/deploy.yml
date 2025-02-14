@@ -16,12 +16,24 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: configure aws credentials
+    - name: Git clone the repository
+      uses: actions/checkout@v4
+    - name: Configure AWS credentials
+      id: get-aws-creds
       uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
       with:
         role-to-assume: arn:aws:iam::665848848438:role/defdevio-github-actions-role
         role-session-name: defdevio
         aws-region: ${{ env.AWS_REGION }}
-    - name: s3 list
-      run: |
-        aws s3 ls
+    - name: Deploy CloudFlare turnstile
+      uses: dagger/dagger-for-github@v6
+      with:
+        module: ./dagger
+        call: | 
+          dagger call publish --function-name cloudflare-turnstile-validator \
+          --source ./lambda/cloudflare-turnstile-validator  \
+          --aws-credentials ~/.aws/credentials \ 
+          --region ${{ env.AWS_REGION }} \
+          --aws-account-id ${{ steps.get-aws-creds.outputs.aws-account-id }} \
+          --repo defdevio/lambda-cloudflare-turnstile-validator \
+          --update-lambda
