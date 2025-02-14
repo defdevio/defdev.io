@@ -1,9 +1,10 @@
-name: deploy-defdevio
+name: pull-request
 
 on:
-  push:
-    branches:
-    - main
+  pull_request:
+    types:
+    - synchronize
+    - opened
 
 env:
   AWS_REGION: us-west-2
@@ -13,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  run-terraform-spec-plan:
     runs-on: ubuntu-latest
     steps:
     - name: Git clone the repository
@@ -43,44 +44,11 @@ jobs:
         verb: call
         module: dagger
         args: >-
-          publish
-          --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
-          --aws-credentials="~/.aws/credentials"
-          --function-name="cloudflare-turnstile-validator"
-          --region="${{ env.AWS_REGION }}"
-          --repo="defdevio/lambda-cloudflare-turnstile-validator"
-          --source="./lambda/cloudflare-turnstile-validator"
-          --update-lambda
-        version: "0.15.3"
-    - name: Deploy emailer lambda
-      uses: dagger/dagger-for-github@v7
-      with:
-        verb: call
-        module: dagger
-        args: >-
-          publish
-          --app-sources-destination="/app/mjml"
-          --app-sources="./lambda/emailer/mjml/email.mjml"
-          --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
-          --aws-credentials="~/.aws/credentials"
-          --function-name="emailer"
-          --region="${{ env.AWS_REGION }}"
-          --repo="defdevio/lambda-emailer"
-          --source="./lambda/emailer"
-        version: "0.15.3"
-    - name: Deploy defdev.io webpage and infra
-      uses: dagger/dagger-for-github@v7
-      with:
-        verb: call
-        module: dagger
-        args: >-
-          terraform-plan
-          --terraform-version="1.10.5"
+          terraform-spec-plan
           --app-source="./src/"
           --aws-credentials="~/.aws/credentials"
           --directory="./infra"
-          --tf-var-file="environments/prod.tfvars" 
-          auto-apply
+          --terraform-version="1.10.5"
           --tf-var-file="environments/prod.tfvars"
         version: "0.15.3"
     - name: Delete credentials file
