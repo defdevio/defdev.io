@@ -31,11 +31,12 @@ jobs:
         verb: call
         module: ./dagger
         args: >
-          publish --function-name cloudflare-turnstile-validator
-          --source ./lambda/cloudflare-turnstile-validator
-          --aws-credentials ~/.aws/credentials
-          --region ${{ env.AWS_REGION }}
-          --aws-account-id ${{ steps.get-aws-creds.outputs.aws-account-id }}
-          --repo defdevio/lambda-cloudflare-turnstile-validator
+          publish 
+          --function-name="cloudflare-turnstile-validator"
+          --source="./lambda/cloudflare-turnstile-validator"
+          --aws-credentials="~/.aws/credentials"
+          --region="${{ env.AWS_REGION }}"
+          --aws-account-id="${{ steps.get-aws-creds.outputs.aws-account-id }}"
+          --repo="defdevio/lambda-cloudflare-turnstile-validator"
           --update-lambda
         version: "0.15.3"
