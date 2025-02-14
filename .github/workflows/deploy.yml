@@ -26,9 +26,10 @@ jobs:
         role-session-name: defdevio
         aws-region: ${{ env.AWS_REGION }}
     - name: Deploy CloudFlare turnstile
-      uses: dagger/dagger-for-github@v6
+      uses: dagger/dagger-for-github@v7
       with:
         verb: call
+        module: ./dagger
         args: >
           publish --function-name cloudflare-turnstile-validator
           --source ./lambda/cloudflare-turnstile-validator
