@@ -23,7 +23,7 @@ jobs:
       id: get-aws-creds
       uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
       with:
-        role-to-assume: arn:aws:iam::665848848438:role/defdevio-github-actions-pr-role
+        role-to-assume: arn:aws:iam::665848848438:role/defdevio-github-actions-view
         role-session-name: defdevio
         aws-region: ${{ env.AWS_REGION }}
         output-credentials: true
@@ -51,7 +51,7 @@ jobs:
           --terraform-version="1.10.5"
           --tf-var-file="environments/prod.tfvars"
         version: "0.15.3"
-    - name: Delete credentials file
+    - name: Always delete credentials file
       if: always()
       run: |
         rm -rf ~/.aws
