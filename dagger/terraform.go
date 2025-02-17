@@ -6,24 +6,26 @@ import (
 	"fmt"
 )
 
+// Run terraform plan with the plan file saved to a DefDevIo Dagger container: "terraform-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars"
 func (m *DefDevIo) TerraformPlan(
 	ctx context.Context,
+	// Path on host of files to upload to AWS S3
+	appSource *dagger.Directory,
+	// Path on host to an AWS credentials file
+	awsCredentials *dagger.File,
+	// Path on host to terraform code
 	directory *dagger.Directory,
-	// path where the plan output should be stored
+	// Container path where the plan output should be stored
 	// +optional
 	// +default="tfplan"
 	planOutput string,
-	// automatically apply the terraform plan
-	// +default=false
-	autoApply bool,
-	// set the version of the terraform binary to use
+	// Version of terraform to use
 	// +default="1.8.4"
 	terraformVersion string,
-	awsCredentials *dagger.File,
-	appSource *dagger.Directory,
+	// Path on host to the tfvars file to use
 	tfVarFile string,
 ) *DefDevIo {
-	ctr, err := m.TerraformContainer(directory, terraformVersion, awsCredentials, appSource)
+	ctr, err := m.terraformContainer(directory, terraformVersion, awsCredentials, appSource)
 	if err != nil {
 		return nil
 	}
@@ -37,6 +39,7 @@ func (m *DefDevIo) TerraformPlan(
 		"terraform",
 		"plan",
 		"-var-file", tfVarFile,
+		"-out", planOutput,
 	})
 
 	_, err = plan.Stderr(ctx)
@@ -45,24 +48,25 @@ func (m *DefDevIo) TerraformPlan(
 		return nil
 	}
 
-	return &DefDevIo{Plan: plan}
+	return &DefDevIo{plan: plan}
 }
 
+// Run a terraform plan and print the result to stdout: "terraform-spec-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars"
 func (m *DefDevIo) TerraformSpecPlan(
 	ctx context.Context,
-	// the app source code directory
+	// Path on host of files to upload to S3
 	appSource *dagger.Directory,
-	// the directory of the terraform code
+	// Path on host to an AWS credentials file
+	awsCredentials *dagger.File,
+	// Path on host to terraform code
 	directory *dagger.Directory,
-	// the terraform version to use
+	// The terraform version to use
 	// +default="1.10.5"
 	terraformVersion string,
-	// the path to the AWS credentials file
-	awsCredentials *dagger.File,
-	// the terraform .tfvars file to use
+	// Path on host to the tfvars file to use
 	tfVarFile string,
 ) (string, error) {
-	ctr, err := m.TerraformContainer(directory, terraformVersion, awsCredentials, appSource)
+	ctr, err := m.terraformContainer(directory, terraformVersion, awsCredentials, appSource)
 	if err != nil {
 		return "", err
 	}
@@ -81,13 +85,19 @@ func (m *DefDevIo) TerraformSpecPlan(
 	return plan.Stdout(ctx)
 }
 
-func (m *DefDevIo) AutoApply(ctx context.Context, tfVarFile string) (string, error) {
-	if m.Plan != nil {
-		apply := m.Plan.WithExec([]string{
+// Auto apply the plan saved to a DefDevIo Dagger container: "terraform-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars terraform-auto-apply"
+func (m *DefDevIo) TerraformAutoApply(
+	ctx context.Context,
+	// The tfplan file to apply
+	// +optional
+	// +default="tfplan"
+	planInput string,
+) (string, error) {
+	if m.plan != nil {
+		apply := m.plan.WithExec([]string{
 			"terraform",
 			"apply",
-			"-var-file", tfVarFile,
-			"-auto-approve",
+			planInput,
 		})
 
 		return apply.Stdout(ctx)
@@ -96,7 +106,7 @@ func (m *DefDevIo) AutoApply(ctx context.Context, tfVarFile string) (string, err
 	return "", fmt.Errorf("errors were present: canceling auto apply")
 }
 
-func (m *DefDevIo) TerraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {
+func (m *DefDevIo) terraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {
 	ctr := dag.Container().
 		From(fmt.Sprintf("hashicorp/terraform:%s", terraformVersion)).
 		WithMountedDirectory("/mnt", directory).

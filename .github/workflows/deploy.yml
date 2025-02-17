@@ -68,22 +68,21 @@ jobs:
           --repo="defdevio/lambda-emailer"
           --source="./lambda/emailer"
         version: "0.15.3"
-    - name: Deploy defdev.io webpage and infra
+    - name: Deploy defdev.io web page and infra
       uses: dagger/dagger-for-github@v7
       with:
         verb: call
         module: dagger
         args: >-
           terraform-plan
-          --terraform-version="1.10.5"
           --app-source="./src/"
           --aws-credentials="~/.aws/credentials"
           --directory="./infra"
+          --terraform-version="1.10.5"
           --tf-var-file="environments/prod.tfvars" 
-          auto-apply
-          --tf-var-file="environments/prod.tfvars"
+          terraform-auto-apply
         version: "0.15.3"
-    - name: Delete credentials file
+    - name: Always delete credentials file
       if: always()
       run: |
         rm -rf ~/.aws
