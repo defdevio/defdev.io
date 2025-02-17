@@ -1,6 +1,6 @@
 variable "lambda_functions" {
   default     = {}
-  description = "A map of Lambda Functions specs."
+  description = "A map of Lambda Functions specs to deploy."
 
   type = map(object({
     spec = object({
