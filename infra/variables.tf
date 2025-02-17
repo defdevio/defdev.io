@@ -16,7 +16,7 @@ variable "lambda_functions" {
 
 variable "s3_buckets" {
   default     = {}
-  description = "A map of S3 bucket definitions."
+  description = "A map of S3 bucket definitions to deploy."
 
   type = map(object({
     spec = object({
