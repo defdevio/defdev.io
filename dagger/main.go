@@ -21,12 +21,10 @@ import (
 )
 
 type DefDevIo struct {
-	Plan    *dagger.Container
-	Apply   *dagger.Container
-	Actions []string
+	plan *dagger.Container
 }
 
-// example usage: "publish --source . --app-sources ~/foo.html,~/bar.js --app-sources-destination /app/ --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
+// Publish a Lambda container to ECR: "publish --source . --app-sources ~/foo.html,~/bar.js --app-sources-destination /app/ --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
 func (m *DefDevIo) Publish(
 	ctx context.Context,
 	// AWS Lambda source code directory to copy to container
@@ -66,7 +64,7 @@ func (m *DefDevIo) Publish(
 	return newImageUri, nil
 }
 
-// example usage: "build --source . --app-sources "./foo.html,~/bar.js" --app-sources-destination "/app/mjml" function-name "example"
+// Build a Lambda container: "build --source . --app-sources ./foo.html,~/bar.js --app-sources-destination /app/mjml function-name example"
 func (m *DefDevIo) Build(
 	// Additional app source files as a comma separated list to copy to the container
 	// +optional
