@@ -1,0 +1,59 @@
+name: pull-request
+
+on:
+  pull_request:
+    types:
+    - synchronize
+    - opened
+
+env:
+  AWS_REGION: us-west-2
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  run-terraform-spec-plan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git clone the repository
+      uses: actions/checkout@v4
+    - name: Configure AWS credentials
+      id: get-aws-creds
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+      with:
+        role-to-assume: arn:aws:iam::665848848438:role/defdevio-github-actions-view
+        role-session-name: defdevio
+        aws-region: ${{ env.AWS_REGION }}
+        output-credentials: true
+    - name: Set credentials file
+      run: |
+        mkdir ~/.aws
+        KEY_ID=$AWS_ACCESS_KEY_ID
+        SECRET_KEY=$AWS_SECRET_ACCESS_KEY
+        SESSION_TOKEN=$AWS_SESSION_TOKEN
+
+        echo "[default]" >> ~/.aws/credentials
+        echo "aws_access_key_id = ${KEY_ID}" >> ~/.aws/credentials
+        echo "aws_secret_access_key = ${SECRET_KEY}" >> ~/.aws/credentials
+        echo "aws_session_token = ${SESSION_TOKEN}" >> ~/.aws/credentials
+    - name: Build site
+      run: npm ci && npm run build
+    - name: Run terraform plan
+      uses: dagger/dagger-for-github@v7
+      with:
+        verb: call
+        module: dagger
+        args: >-
+          terraform-spec-plan
+          --app-source="./dist/"
+          --aws-credentials="~/.aws/credentials"
+          --directory="./infra"
+          --terraform-version="1.10.5"
+          --tf-var-file="environments/prod.tfvars"
+        version: "0.20.8"
+    - name: Always delete credentials file
+      if: always()
+      run: |
+        rm -rf ~/.aws
