@@ -1,6 +1,0 @@
-**/.DS_Store
-infra/.terraform
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.tfstate.lock.info
-node_modules/*

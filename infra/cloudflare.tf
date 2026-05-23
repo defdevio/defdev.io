@@ -1,5 +1,6 @@
 data "cloudflare_zone" "this" {
-  name = "defdev.io"
+  account_id = "df3e4e718a5be97812b586f67e959f19"
+  name       = "defdev.io"
 }
 
 resource "cloudflare_record" "www_defdev_io_acm_validation" {
