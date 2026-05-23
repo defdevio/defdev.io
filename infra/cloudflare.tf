@@ -43,3 +43,23 @@ resource "cloudflare_turnstile_widget" "this" {
   name       = "Contact us form protection widget"
   region     = "world"
 }
+
+moved {
+  from = cloudflare_record.www_defdev_io_acm_validation
+  to   = cloudflare_dns_record.www_defdev_io_acm_validation
+}
+
+moved {
+  from = cloudflare_record.www_defdev_io_cloudfront_record
+  to   = cloudflare_dns_record.www_defdev_io_cloudfront_record
+}
+
+moved {
+  from = cloudflare_record.ses_email_verification
+  to   = cloudflare_dns_record.ses_email_verification
+}
+
+moved {
+  from = cloudflare_record.ses_dkim_records
+  to   = cloudflare_dns_record.ses_dkim_records
+}
