@@ -44,6 +44,6 @@ resource "cloudflare_record" "ses_dkim_records" {
 resource "cloudflare_turnstile_widget" "this" {
   account_id = "df3e4e718a5be97812b586f67e959f19"
   domains    = ["defdev.io", "www.defdev.io", "localhost"]
-  mode       = "world"
+  mode       = "managed"
   name       = "Contact us form protection widget"
 }
