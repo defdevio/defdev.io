@@ -1,6 +1,5 @@
 data "cloudflare_zone" "this" {
-  account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["cloudflare_account_id"]
-  name       = "defdev.io"
+  zone_id = "41bd26725ef299b72663216ffa012106"
 }
 
 resource "cloudflare_dns_record" "www_defdev_io_acm_validation" {
@@ -44,6 +43,7 @@ resource "cloudflare_dns_record" "ses_dkim_records" {
 resource "cloudflare_turnstile_widget" "this" {
   account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["cloudflare_account_id"]
   domains    = ["defdev.io", "www.defdev.io", "localhost"]
-  mode       = "world"
+  mode       = "managed"
   name       = "Contact us form protection widget"
+  region     = "world"
 }

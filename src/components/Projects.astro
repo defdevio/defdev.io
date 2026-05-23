@@ -60,10 +60,12 @@ const projects = [
           <div class="bg-zinc-900 border border-zinc-800 hover:border-purple-700/50 rounded-xl p-6 flex flex-col transition-all duration-200 group hover:shadow-xl hover:shadow-purple-900/10">
             <!-- Icon + badge row -->
             <div class="flex items-center justify-between mb-5">
-              {project.logo
-                ? <img src={project.logo} alt={project.name} class={project.logo.endsWith('.png') ? 'h-12 w-12 object-contain' : 'h-7'} />
-                : <span class="text-3xl leading-none">{project.icon}</span>
-              }
+              <div class="h-12 flex items-center">
+                {project.logo
+                  ? <img src={project.logo} alt={project.name} class={project.logo.endsWith('.png') ? 'h-12 w-12 object-contain' : 'h-7'} />
+                  : <span class="text-3xl leading-none">{project.icon}</span>
+                }
+              </div>
               <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${project.badgeClass}`}>
                 {project.badge}
               </span>
