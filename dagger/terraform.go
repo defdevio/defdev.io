@@ -44,11 +44,13 @@ func (m *DefDevIo) TerraformPlan(
 
 	_, err = plan.Stderr(ctx)
 	if err != nil {
-		println(plan.Stderr(ctx))
-		return nil
+		return &DefDevIo{
+			Plan:         plan,
+			PlanHasError: true,
+		}
 	}
 
-	return &DefDevIo{plan: plan}
+	return &DefDevIo{Plan: plan}
 }
 
 // Run a terraform plan and print the result to stdout: "terraform-spec-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars"
@@ -85,7 +87,7 @@ func (m *DefDevIo) TerraformSpecPlan(
 	return plan.Stdout(ctx)
 }
 
-// Auto apply the plan saved to a DefDevIo Dagger container: "terraform-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars terraform-auto-apply"
+// Validate no errors then auto apply the plan saved to the DefDevIo Dagger container: "terraform-plan --terraform-version 1.10.5 --app-source ./src/ --aws-credentials ~/.aws/credentials --directory ./infra --tf-var-file environments/prod.tfvars terraform-auto-apply"
 func (m *DefDevIo) TerraformAutoApply(
 	ctx context.Context,
 	// The tfplan file to apply
@@ -93,8 +95,12 @@ func (m *DefDevIo) TerraformAutoApply(
 	// +default="tfplan"
 	planInput string,
 ) (string, error) {
-	if m.plan != nil {
-		apply := m.plan.WithExec([]string{
+	if m.PlanHasError {
+		return m.Plan.Stderr(ctx)
+	}
+
+	if m.Plan != nil {
+		apply := m.Plan.WithExec([]string{
 			"terraform",
 			"apply",
 			planInput,
@@ -103,7 +109,7 @@ func (m *DefDevIo) TerraformAutoApply(
 		return apply.Stdout(ctx)
 	}
 
-	return "", fmt.Errorf("errors were present: canceling auto apply")
+	return "", fmt.Errorf("unknown error: canceling auto apply")
 }
 
 func (m *DefDevIo) terraformContainer(directory *dagger.Directory, terraformVersion string, awsCredentials *dagger.File, appSource *dagger.Directory) (*dagger.Container, error) {

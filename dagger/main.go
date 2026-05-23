@@ -21,7 +21,8 @@ import (
 )
 
 type DefDevIo struct {
-	plan *dagger.Container
+	Plan         *dagger.Container
+	PlanHasError bool
 }
 
 // Publish a Lambda container to ECR: "publish --source . --app-sources ~/foo.html,~/bar.js --app-sources-destination /app/ --aws-credentials ~/.aws/credentials --aws-account-id 12345 --repo test"
