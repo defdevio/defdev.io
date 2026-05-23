@@ -15,7 +15,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~>1.10 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.84.0 |
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | >= 5.0 < 6.0 |
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | >= 5.0, < 6.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | 0.12.1 |
 
 ## Providers
