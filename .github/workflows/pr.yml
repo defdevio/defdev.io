@@ -52,7 +52,7 @@ jobs:
           --directory="./infra"
           --terraform-version="1.10.5"
           --tf-var-file="environments/prod.tfvars"
-        version: "0.15.3"
+        version: "0.20.8"
     - name: Always delete credentials file
       if: always()
       run: |
