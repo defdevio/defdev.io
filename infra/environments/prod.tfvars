@@ -34,7 +34,7 @@ s3_buckets = {
   }
   "www.defdev.io" = {
     spec = {
-      source_file_path    = "../dist"
+      source_file_path    = "/src"
       source_file_pattern = "**"
     }
   }
