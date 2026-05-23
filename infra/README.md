@@ -50,10 +50,10 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | [aws_secretsmanager_secret.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_policy.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_policy) | resource |
 | [aws_secretsmanager_secret_version.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_version) | resource |
-| [cloudflare_record.ses_dkim_records](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/record) | resource |
-| [cloudflare_record.ses_email_verification](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/record) | resource |
-| [cloudflare_record.www_defdev_io_acm_validation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/record) | resource |
-| [cloudflare_record.www_defdev_io_cloudfront_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/record) | resource |
+| [cloudflare_dns_record.ses_dkim_records](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.ses_email_verification](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.www_defdev_io_acm_validation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.www_defdev_io_cloudfront_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
 | [cloudflare_turnstile_widget.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/turnstile_widget) | resource |
 | [time_sleep.wait_5_minutes](https://registry.terraform.io/providers/hashicorp/time/0.12.1/docs/resources/sleep) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/caller_identity) | data source |

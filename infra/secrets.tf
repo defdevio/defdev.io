@@ -32,4 +32,8 @@ resource "aws_secretsmanager_secret_version" "cloudflare_turnstile_widget" {
     "site-key"   = cloudflare_turnstile_widget.this.id
     "secret-key" = cloudflare_turnstile_widget.this.secret
   })
+
+  lifecycle {
+    ignore_changes = [secret_string]
+  }
 }

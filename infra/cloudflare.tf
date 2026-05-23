@@ -3,7 +3,7 @@ data "cloudflare_zone" "this" {
   name       = "defdev.io"
 }
 
-resource "cloudflare_record" "www_defdev_io_acm_validation" {
+resource "cloudflare_dns_record" "www_defdev_io_acm_validation" {
   for_each = {
     for _, dvo in aws_acm_certificate.this.domain_validation_options :
     dvo.domain_name => dvo
@@ -16,7 +16,7 @@ resource "cloudflare_record" "www_defdev_io_acm_validation" {
   zone_id = data.cloudflare_zone.this.id
 }
 
-resource "cloudflare_record" "www_defdev_io_cloudfront_record" {
+resource "cloudflare_dns_record" "www_defdev_io_cloudfront_record" {
   content = module.cloudfront["www.defdev.io"].domain_name
   name    = "www"
   ttl     = 300
@@ -24,7 +24,7 @@ resource "cloudflare_record" "www_defdev_io_cloudfront_record" {
   zone_id = data.cloudflare_zone.this.id
 }
 
-resource "cloudflare_record" "ses_email_verification" {
+resource "cloudflare_dns_record" "ses_email_verification" {
   content = module.ses.domain_verification_token
   name    = "_amazonses.defdev.io"
   ttl     = 300
@@ -32,7 +32,7 @@ resource "cloudflare_record" "ses_email_verification" {
   zone_id = data.cloudflare_zone.this.id
 }
 
-resource "cloudflare_record" "ses_dkim_records" {
+resource "cloudflare_dns_record" "ses_dkim_records" {
   count   = 3
   content = "${module.ses.domain_dkim_tokens[count.index]}.dkim.amazonses.com"
   name    = "${module.ses.domain_dkim_tokens[count.index]}._domainkey"
@@ -42,8 +42,8 @@ resource "cloudflare_record" "ses_dkim_records" {
 }
 
 resource "cloudflare_turnstile_widget" "this" {
-  account_id = "df3e4e718a5be97812b586f67e959f19"
+  account_id = jsondecode(data.aws_secretsmanager_secret_version.cloudflare.secret_string)["cloudflare_account_id"]
   domains    = ["defdev.io", "www.defdev.io", "localhost"]
-  mode       = "managed"
+  mode       = "world"
   name       = "Contact us form protection widget"
 }
