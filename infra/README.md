@@ -64,7 +64,6 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/region) | data source |
 | [aws_secretsmanager_secret.cloudflare](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/secretsmanager_secret) | data source |
 | [aws_secretsmanager_secret_version.cloudflare](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/secretsmanager_secret_version) | data source |
-| [cloudflare_zone.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/data-sources/zone) | data source |
 
 ## Inputs
 

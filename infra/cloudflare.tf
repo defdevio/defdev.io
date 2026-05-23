@@ -1,7 +1,3 @@
-data "cloudflare_zone" "this" {
-  zone_id = "41bd26725ef299b72663216ffa012106"
-}
-
 resource "cloudflare_dns_record" "www_defdev_io_acm_validation" {
   for_each = {
     for _, dvo in aws_acm_certificate.this.domain_validation_options :
@@ -12,7 +8,7 @@ resource "cloudflare_dns_record" "www_defdev_io_acm_validation" {
   name    = each.value.resource_record_name
   ttl     = 300
   type    = each.value.resource_record_type
-  zone_id = data.cloudflare_zone.this.id
+  zone_id = "41bd26725ef299b72663216ffa012106"
 }
 
 resource "cloudflare_dns_record" "www_defdev_io_cloudfront_record" {
@@ -20,7 +16,7 @@ resource "cloudflare_dns_record" "www_defdev_io_cloudfront_record" {
   name    = "www"
   ttl     = 300
   type    = "CNAME"
-  zone_id = data.cloudflare_zone.this.id
+  zone_id = "41bd26725ef299b72663216ffa012106"
 }
 
 resource "cloudflare_dns_record" "ses_email_verification" {
@@ -28,7 +24,7 @@ resource "cloudflare_dns_record" "ses_email_verification" {
   name    = "_amazonses.defdev.io"
   ttl     = 300
   type    = "TXT"
-  zone_id = data.cloudflare_zone.this.id
+  zone_id = "41bd26725ef299b72663216ffa012106"
 }
 
 resource "cloudflare_dns_record" "ses_dkim_records" {
@@ -37,7 +33,7 @@ resource "cloudflare_dns_record" "ses_dkim_records" {
   name    = "${module.ses.domain_dkim_tokens[count.index]}._domainkey"
   ttl     = 300
   type    = "CNAME"
-  zone_id = data.cloudflare_zone.this.id
+  zone_id = "41bd26725ef299b72663216ffa012106"
 }
 
 resource "cloudflare_turnstile_widget" "this" {
