@@ -24,7 +24,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.84.0 |
 | <a name="provider_aws.east"></a> [aws.east](#provider\_aws.east) | 5.84.0 |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 4.51.0 |
+| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.19.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.12.1 |
 
 ## Modules
