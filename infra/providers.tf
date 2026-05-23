@@ -11,6 +11,10 @@ data "aws_secretsmanager_secret" "cloudflare" {
   name = "cloudflare"
 }
 
+data "aws_secretsmanager_secret_version" "cloudflare" {
+  secret_id = data.aws_secretsmanager_secret.cloudflare.arn
+}
+
 ephemeral "aws_secretsmanager_secret_version" "cloudflare" {
   secret_id = data.aws_secretsmanager_secret.cloudflare.arn
 }

@@ -51,7 +51,7 @@ jobs:
           --repo="defdevio/lambda-cloudflare-turnstile-validator"
           --source="./lambda/cloudflare-turnstile-validator"
           --update-lambda
-        version: "0.15.3"
+        version: "0.20.8"
     - name: Deploy emailer lambda
       uses: dagger/dagger-for-github@v7
       with:
@@ -67,7 +67,10 @@ jobs:
           --region="${{ env.AWS_REGION }}"
           --repo="defdevio/lambda-emailer"
           --source="./lambda/emailer"
-        version: "0.15.3"
+          --update-lambda
+        version: "0.20.8"
+    - name: Build site
+      run: npm ci && npm run build
     - name: Deploy defdev.io web page and infra
       uses: dagger/dagger-for-github@v7
       with:
@@ -75,13 +78,13 @@ jobs:
         module: dagger
         args: >-
           terraform-plan
-          --app-source="./src/"
+          --app-source="./dist/"
           --aws-credentials="~/.aws/credentials"
           --directory="./infra"
           --terraform-version="1.10.5"
           --tf-var-file="environments/prod.tfvars" 
           terraform-auto-apply
-        version: "0.15.3"
+        version: "0.20.8"
     - name: Always delete credentials file
       if: always()
       run: |

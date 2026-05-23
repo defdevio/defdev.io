@@ -1,14 +1,21 @@
 locals {
   content_type = {
-    css  = "text/css"
-    html = "text/html"
-    jpeg = "image/jpeg"
-    js   = "text/javascript"
-    json = "application/json"
-    map  = "text/css"
-    png  = "image/png"
-    scss = "text/plain"
-    svg  = "image/svg+xml"
+    css   = "text/css"
+    html  = "text/html"
+    ico   = "image/x-icon"
+    jpeg  = "image/jpeg"
+    jpg   = "image/jpeg"
+    js    = "text/javascript"
+    json  = "application/json"
+    map   = "text/css"
+    png   = "image/png"
+    scss  = "text/plain"
+    svg   = "image/svg+xml"
+    txt   = "text/plain"
+    webp  = "image/webp"
+    woff  = "font/woff"
+    woff2 = "font/woff2"
+    xml   = "application/xml"
   }
 }
 

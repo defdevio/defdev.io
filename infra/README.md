@@ -15,7 +15,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~>1.10 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.84.0 |
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | 4.51.0 |
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | >= 5.0, < 6.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | 0.12.1 |
 
 ## Providers
@@ -24,7 +24,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.84.0 |
 | <a name="provider_aws.east"></a> [aws.east](#provider\_aws.east) | 5.84.0 |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 4.51.0 |
+| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.19.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.12.1 |
 
 ## Modules
@@ -50,11 +50,11 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | [aws_secretsmanager_secret.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_policy.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_policy) | resource |
 | [aws_secretsmanager_secret_version.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_version) | resource |
-| [cloudflare_record.ses_dkim_records](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
-| [cloudflare_record.ses_email_verification](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
-| [cloudflare_record.www_defdev_io_acm_validation](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
-| [cloudflare_record.www_defdev_io_cloudfront_record](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/record) | resource |
-| [cloudflare_turnstile_widget.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/resources/turnstile_widget) | resource |
+| [cloudflare_dns_record.ses_dkim_records](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.ses_email_verification](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.www_defdev_io_acm_validation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_dns_record.www_defdev_io_cloudfront_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
+| [cloudflare_turnstile_widget.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/turnstile_widget) | resource |
 | [time_sleep.wait_5_minutes](https://registry.terraform.io/providers/hashicorp/time/0.12.1/docs/resources/sleep) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.allow_cloudfront_origin](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
@@ -63,7 +63,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | [aws_iam_policy_document.lambda_ecr_pull](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/region) | data source |
 | [aws_secretsmanager_secret.cloudflare](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/secretsmanager_secret) | data source |
-| [cloudflare_zone.this](https://registry.terraform.io/providers/cloudflare/cloudflare/4.51.0/docs/data-sources/zone) | data source |
+| [aws_secretsmanager_secret_version.cloudflare](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/secretsmanager_secret_version) | data source |
 
 ## Inputs
 

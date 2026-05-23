@@ -1,0 +1,31 @@
+<svg width="168" height="60" viewBox="0 0 168 60" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cube + wordmark (no background rect — transparent) -->
+  <g transform="translate(8,38)">
+    <!-- Cube -->
+    <g transform="translate(0,-20)">
+      <polygon points="0,0 18,-10 36,0 18,10"
+               fill="url(#circuitGrad)"/>
+      <polygon points="18,10 36,0 36,20 18,30"
+               fill="#1E293B"/>
+      <polygon points="0,0 18,10 18,30 0,20"
+               fill="#4C1D95"/>
+    </g>
+
+    <!-- Text -->
+    <text x="46" y="6"
+          fill="#F9FAFB"
+          font-family="Segoe UI, system-ui, sans-serif"
+          font-size="40"
+          font-weight="600"
+          textLength="106" lengthAdjust="spacing"
+          letter-spacing="1">ferme</text>
+  </g>
+</svg>
