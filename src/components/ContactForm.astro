@@ -150,7 +150,9 @@
 </section>
 
 <script>
-  const SUBMIT_URL = 'https://vh4tf5xws5.execute-api.us-west-2.amazonaws.com/prod/contact';
+  const SUBMIT_URL = import.meta.env.DEV
+    ? '/api/contact'
+    : 'https://vh4tf5xws5.execute-api.us-west-2.amazonaws.com/prod/contact';
 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const submitBtn = document.getElementById('submit-btn');
