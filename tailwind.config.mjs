@@ -4,6 +4,10 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        // Height-based breakpoint — targets short/landscape viewports (≤700px tall)
+        short: { raw: '(max-height: 700px)' },
+      },
       colors: {
         purple: {
           700: '#6f42c1',

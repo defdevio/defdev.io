@@ -150,7 +150,9 @@
 </section>
 
 <script>
-  const SUBMIT_URL = 'https://vh4tf5xws5.execute-api.us-west-2.amazonaws.com/prod/contact';
+  const SUBMIT_URL = import.meta.env.DEV
+    ? '/api/contact'
+    : 'https://vh4tf5xws5.execute-api.us-west-2.amazonaws.com/prod/contact';
 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const submitBtn = document.getElementById('submit-btn');
@@ -171,23 +173,32 @@
     e.preventDefault();
     showOnly('submit-send-btn');
 
+    console.log('[contact] submitting to', SUBMIT_URL);
+
     try {
       const formData = new FormData(form);
+      const payload = Object.fromEntries(formData);
+      console.log('[contact] payload keys:', Object.keys(payload));
+
       const response = await fetch(SUBMIT_URL, {
         method: 'POST',
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' },
       });
 
+      const body = await response.text();
+
       if (response.ok) {
+        console.log('[contact] success', response.status);
         if (form) form.style.display = 'none';
         if (successMessage) successMessage.style.display = '';
       } else {
-        console.error('Submit error', response.status, response.statusText);
+        console.error('[contact] submit failed', response.status, body);
         showOnly('error-btn');
       }
     } catch (err) {
-      console.error('Fetch error', err);
+      const message = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+      console.error('[contact] fetch threw', message, err);
       showOnly('error-btn');
     }
   });

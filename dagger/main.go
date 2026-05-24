@@ -82,7 +82,7 @@ func (m *DefDevIo) Build(
 	build := m.buildEnv(source).
 		WithExec([]string{"go", "build", "-o", function}).
 		Directory("/src")
-	final := dag.Container().From("alpine").
+	final := dag.Container(dagger.ContainerOpts{Platform: "linux/arm64"}).From("alpine").
 		WithDirectory("/app", build)
 
 	if len(appSources) > 0 {
@@ -120,6 +120,9 @@ func (m *DefDevIo) buildEnv(source *dagger.Directory) *dagger.Container {
 		WithDirectory("/src", source).
 		WithMountedCache("/root/.cache/go-build", goCache).
 		WithWorkdir("/src").
+		WithEnvVariable("GOOS", "linux").
+		WithEnvVariable("GOARCH", "arm64").
+		WithEnvVariable("CGO_ENABLED", "0").
 		WithExec([]string{"go", "mod", "tidy"})
 }
 
