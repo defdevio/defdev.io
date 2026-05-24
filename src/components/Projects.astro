@@ -7,7 +7,8 @@ const projects = [
       'A Kubernetes-native module and provider registry built for teams that want full ownership of their IaC supply chain — no JFrog required.',
     badge: 'Open Source',
     badgeClass: 'bg-emerald-900/50 text-emerald-400 border border-emerald-700/40',
-    icon: '📦',
+    logo: '/img/opendepot_logo.svg',
+    logoClass: 'h-12',
     tags: ['Kubernetes', 'OpenTofu', 'Terraform', 'Go'],
     links: [
       { label: 'Docs', href: 'https://tonedefdev.github.io/opendepot/', type: 'docs' },
@@ -62,7 +63,7 @@ const projects = [
             <div class="flex items-center justify-between mb-5">
               <div class="h-12 flex items-center">
                 {project.logo
-                  ? <img src={project.logo} alt={project.name} class={project.logo.endsWith('.png') ? 'h-12 w-12 object-contain' : 'h-7'} />
+                  ? <img src={project.logo} alt={project.name} class={project.logo.endsWith('.png') ? 'h-12 w-12 object-contain' : (project.logoClass ?? 'h-7')} />
                   : <span class="text-3xl leading-none">{project.icon}</span>
                 }
               </div>
