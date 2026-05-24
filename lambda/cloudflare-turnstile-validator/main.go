@@ -80,6 +80,8 @@ func init() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Printf("received body: %s", request.Body)
+
 	var handlerEvent Event
 	if err := json.Unmarshal([]byte(request.Body), &handlerEvent); err != nil {
 		log.Printf("failed to unmarshal event: %v", err)
@@ -87,36 +89,42 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	}
 
 	if handlerEvent.CfTurnstileResponse == "" {
+		log.Printf("400: cf-turnstile-response is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
 
 	if handlerEvent.ClientName == "" {
+		log.Printf("400: clientName is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
 
 	if handlerEvent.PhoneNumber == "" {
+		log.Printf("400: phoneNumber is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
 
 	if handlerEvent.EmailAddress == "" {
+		log.Printf("400: emailAddress is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
 
 	if handlerEvent.ProjectDescription == "" {
+		log.Printf("400: projectDescription is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
 	}
 
 	if handlerEvent.PreferredCloudProvider == "" {
+		log.Printf("400: preferredCloudProvider is empty")
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 		}, nil
