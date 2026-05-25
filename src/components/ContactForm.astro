@@ -25,16 +25,21 @@
               required
               class="w-full bg-zinc-800 border border-zinc-700 focus:border-purple-700 focus:ring-1 focus:ring-purple-700/50 rounded-md px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-colors text-sm"
             />
+            <p id="error-clientName" class="mt-1.5 text-xs text-red-400 hidden"></p>
           </div>
           <div>
             <label for="phoneNumber" class="block text-sm font-medium text-zinc-300 mb-1.5">Phone number</label>
             <input
-              type="text"
+              type="tel"
               id="phoneNumber"
               name="phoneNumber"
+              placeholder="123-456-7890"
+              pattern="^\d{3}-\d{3}-\d{4}$"
+              inputmode="numeric"
               required
               class="w-full bg-zinc-800 border border-zinc-700 focus:border-purple-700 focus:ring-1 focus:ring-purple-700/50 rounded-md px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-colors text-sm"
             />
+            <p id="error-phoneNumber" class="mt-1.5 text-xs text-red-400 hidden"></p>
           </div>
         </div>
 
@@ -48,6 +53,7 @@
             required
             class="w-full bg-zinc-800 border border-zinc-700 focus:border-purple-700 focus:ring-1 focus:ring-purple-700/50 rounded-md px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-colors text-sm"
           />
+          <p id="error-clientEmailAddress" class="mt-1.5 text-xs text-red-400 hidden"></p>
         </div>
 
         <div>
@@ -59,6 +65,7 @@
             required
             class="w-full bg-zinc-800 border border-zinc-700 focus:border-purple-700 focus:ring-1 focus:ring-purple-700/50 rounded-md px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-colors resize-none text-sm"
           ></textarea>
+          <p id="error-description" class="mt-1.5 text-xs text-red-400 hidden"></p>
         </div>
 
         <div>
@@ -80,6 +87,7 @@
             <option value="Other" />
             <option value="No preference" />
           </datalist>
+          <p id="error-cloudProviders" class="mt-1.5 text-xs text-red-400 hidden"></p>
         </div>
 
         <!-- Cloudflare Turnstile -->
@@ -141,8 +149,8 @@
         </div>
         <h3 class="text-xl font-bold text-white mb-3">Message Sent!</h3>
         <p class="text-zinc-400 leading-relaxed text-sm">
-          Thanks for reaching out to <span class="text-purple-400">DefDev</span>. Someone will be in touch
-          shortly to discuss next steps. We look forward to working with you!
+          Thanks for reaching out to <span class="text-purple-400">DefDev</span>. I will be in touch
+          shortly to discuss next steps. I look forward to working with you!
         </p>
       </div>
     </div>
@@ -161,6 +169,144 @@
   const errorBtn = document.getElementById('error-btn');
   const successMessage = document.getElementById('success-message');
 
+  const allowedProviders = new Set([
+    'aws',
+    'azure',
+    'gcp',
+    'oracle cloud',
+    'digital ocean',
+    'other',
+    'no preference',
+  ]);
+
+  function getEl<T extends HTMLElement>(id: string): T | null {
+    return document.getElementById(id) as T | null;
+  }
+
+  function setFieldError(fieldId: string, message: string) {
+    const field = getEl<HTMLInputElement | HTMLTextAreaElement>(fieldId);
+    const error = getEl<HTMLElement>(`error-${fieldId}`);
+    if (field) {
+      field.classList.add('border-red-500');
+      field.setAttribute('aria-invalid', 'true');
+    }
+    if (error) {
+      error.textContent = message;
+      error.classList.remove('hidden');
+    }
+  }
+
+  function clearFieldError(fieldId: string) {
+    const field = getEl<HTMLInputElement | HTMLTextAreaElement>(fieldId);
+    const error = getEl<HTMLElement>(`error-${fieldId}`);
+    if (field) {
+      field.classList.remove('border-red-500');
+      field.removeAttribute('aria-invalid');
+    }
+    if (error) {
+      error.textContent = '';
+      error.classList.add('hidden');
+    }
+  }
+
+  function normalize(value: FormDataEntryValue | null): string {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  function isValidEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+  }
+
+  function isValidPhone(value: string): boolean {
+    return /^\d{3}-\d{3}-\d{4}$/.test(value);
+  }
+
+  function validateField(fieldId: string, formData: FormData): boolean {
+    clearFieldError(fieldId);
+
+    const clientName = normalize(formData.get('clientName'));
+    const phoneNumber = normalize(formData.get('phoneNumber'));
+    const emailAddress = normalize(formData.get('emailAddress'));
+    const projectDescription = normalize(formData.get('projectDescription'));
+    const preferredCloudProvider = normalize(formData.get('preferredCloudProvider'));
+
+    if (fieldId === 'clientName') {
+      if (clientName.length < 2) {
+        setFieldError('clientName', 'Please provide your company name.');
+        return false;
+      }
+      return true;
+    }
+
+    if (fieldId === 'phoneNumber') {
+      if (!isValidPhone(phoneNumber)) {
+        setFieldError('phoneNumber', 'Use format ddd-ddd-dddd (example: 123-456-7890).');
+        return false;
+      }
+      return true;
+    }
+
+    if (fieldId === 'clientEmailAddress') {
+      if (!isValidEmail(emailAddress)) {
+        setFieldError('clientEmailAddress', 'Enter a valid email address (e.g., name@company.com).');
+        return false;
+      }
+      return true;
+    }
+
+    if (fieldId === 'description') {
+      if (projectDescription.length < 20) {
+        setFieldError('description', 'Please provide a project description (at least 20 characters).');
+        return false;
+      }
+      return true;
+    }
+
+    if (fieldId === 'cloudProviders') {
+      if (!preferredCloudProvider) {
+        setFieldError('cloudProviders', 'Please select your preferred cloud provider.');
+        return false;
+      }
+      if (!allowedProviders.has(preferredCloudProvider.toLowerCase())) {
+        setFieldError('cloudProviders', 'Choose a provider from the list (or select Other / No preference).');
+        return false;
+      }
+      return true;
+    }
+
+    return true;
+  }
+
+  function validateForm(formData: FormData): boolean {
+    let isValid = true;
+    const fields = ['clientName', 'phoneNumber', 'clientEmailAddress', 'description', 'cloudProviders'];
+
+    fields.forEach((fieldId) => {
+      if (!validateField(fieldId, formData)) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  }
+
+  const validationMap: Record<string, string> = {
+    clientName: 'clientName',
+    phoneNumber: 'phoneNumber',
+    clientEmailAddress: 'clientEmailAddress',
+    description: 'description',
+    cloudProviders: 'cloudProviders',
+  };
+
+  Object.entries(validationMap).forEach(([id, fieldId]) => {
+    const input = getEl<HTMLInputElement | HTMLTextAreaElement>(id);
+    input?.addEventListener('input', () => clearFieldError(fieldId));
+    input?.addEventListener('blur', () => {
+      const fd = form ? new FormData(form) : new FormData();
+      validateField(fieldId, fd);
+    });
+  });
+
   function showOnly(id: string) {
     [submitBtn, submitSendBtn, successBtn, errorBtn].forEach((el) => {
       if (el) el.style.display = 'none';
@@ -171,12 +317,19 @@
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const formData = new FormData(form);
+    const isValid = validateForm(formData);
+    if (!isValid) {
+      showOnly('submit-btn');
+      return;
+    }
+
     showOnly('submit-send-btn');
 
     console.log('[contact] submitting to', SUBMIT_URL);
 
     try {
-      const formData = new FormData(form);
       const payload = Object.fromEntries(formData);
       console.log('[contact] payload keys:', Object.keys(payload));
 
