@@ -254,7 +254,22 @@ const tags = frontmatter.tags ?? [];
     border-radius: 0.75rem;
     padding: 1rem;
     overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 92, 246, 0.65) #09090b;
     margin: 1.1rem 0;
+  }
+
+  .blog-content :global(pre::-webkit-scrollbar) {
+    height: 5px;
+  }
+
+  .blog-content :global(pre::-webkit-scrollbar-track) {
+    background: #09090b;
+  }
+
+  .blog-content :global(pre::-webkit-scrollbar-thumb) {
+    background: rgba(139, 92, 246, 0.65);
+    border-radius: 999px;
   }
 
   .blog-content :global(pre code) {
