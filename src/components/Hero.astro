@@ -7,6 +7,9 @@
     <div class="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full bg-purple-700/15 sm:bg-purple-700/10 blur-3xl"></div>
   </div>
 
+  <!-- iOS WebKit-only boost to preserve glow character without a full gradient overlay -->
+  <div class="hero-ios-glow-boost" aria-hidden="true"></div>
+
   <div class="relative z-10 flex flex-col items-center">
     <img
       src="/img/white_logo_mini.svg"
@@ -55,3 +58,21 @@
   ></div>
 
 </section>
+
+<style>
+  .hero-ios-glow-boost {
+    display: none;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    @media (hover: none) and (pointer: coarse) {
+      .hero-ios-glow-boost {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 34%, rgba(126, 34, 206, 0.24) 0%, rgba(126, 34, 206, 0.1) 33%, rgba(9, 9, 11, 0) 68%);
+      }
+    }
+  }
+</style>
