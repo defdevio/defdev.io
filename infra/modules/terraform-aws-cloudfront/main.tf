@@ -28,6 +28,11 @@ resource "aws_cloudfront_distribution" "this" {
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.url_rewrite.arn
+    }
   }
 
   restrictions {
@@ -42,4 +47,31 @@ resource "aws_cloudfront_distribution" "this" {
     minimum_protocol_version = "TLSv1.1_2016"
     ssl_support_method       = "sni-only"
   }
+}
+
+resource "aws_cloudfront_function" "url_rewrite" {
+  name    = "${replace(var.origin_id, ".", "-")}-url-rewrite"
+  runtime = "cloudfront-js-1.0"
+  publish = true
+  comment = "Rewrite static routes to index.html for S3 origin"
+  code    = <<-EOT
+function handler(event) {
+  var request = event.request;
+  var uri = request.uri;
+
+  // Keep direct file requests unchanged (assets, images, etc.)
+  if (uri.includes('.')) {
+    return request;
+  }
+
+  // Map clean URLs to static index files.
+  if (uri.endsWith('/')) {
+    request.uri = uri + 'index.html';
+  } else {
+    request.uri = uri + '/index.html';
+  }
+
+  return request;
+}
+EOT
 }
