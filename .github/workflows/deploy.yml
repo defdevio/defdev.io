@@ -85,6 +85,18 @@ jobs:
           --tf-var-file="environments/prod.tfvars" 
           terraform-auto-apply
         version: "0.20.8"
+    - name: Invalidate CloudFront cache
+      run: |
+        DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, 'www.defdev.io')].Id | [0]" --output text)
+
+        if [ -z "$DISTRIBUTION_ID" ] || [ "$DISTRIBUTION_ID" = "None" ]; then
+          echo "Could not find CloudFront distribution for www.defdev.io"
+          exit 1
+        fi
+
+        aws cloudfront create-invalidation \
+          --distribution-id "$DISTRIBUTION_ID" \
+          --paths "/*"
     - name: Always delete credentials file
       if: always()
       run: |
