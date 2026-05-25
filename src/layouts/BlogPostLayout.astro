@@ -1,6 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import Footer from '../components/Footer.astro';
+import BackToTopButton from '../components/BackToTopButton.astro';
 
 interface Props {
   frontmatter: {
@@ -10,51 +11,164 @@ interface Props {
     date?: string;
     tags?: string[];
   };
+  toc?: {
+    depth: number;
+    slug: string;
+    text: string;
+  }[];
 }
 
-const { frontmatter } = Astro.props as Props;
+const { frontmatter, toc = [] } = Astro.props as Props;
 const title = frontmatter.title ?? 'DefDev Blog';
 const description = frontmatter.description ?? 'DefDev engineering blog';
 const tags = frontmatter.tags ?? [];
 ---
 
 <Layout title={`${title} | DefDev Blog`} description={description}>
-  <main class="min-h-screen bg-zinc-950 text-zinc-100">
-    <header class="border-b border-zinc-800/50">
-      <div class="max-w-4xl mx-auto px-6 py-6 flex items-center justify-between gap-4">
-        <a href="/" class="text-zinc-400 hover:text-white text-sm transition-colors">← Back to defdev.io</a>
-        <a href="/blog" class="text-zinc-400 hover:text-purple-300 text-sm transition-colors">All posts</a>
+  <main id="top" class="min-h-screen bg-zinc-950 text-zinc-100">
+    <header class="sticky top-0 z-40 border-b border-zinc-800/50 bg-zinc-950/95 backdrop-blur-sm relative">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <a href="/" class="inline-flex items-center text-zinc-300 hover:text-white transition-colors" aria-label="Back to home">
+          <img src="/img/white_logo_mini.svg" alt="DefDev" class="h-10 w-10 sm:h-11 sm:w-11 drop-shadow-[0_0_12px_rgba(168,85,247,0.4)]" />
+        </a>
+
+        <nav class="flex items-center gap-1 text-sm">
+          <a href="/" class="px-2.5 py-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800/70 transition-colors">Home</a>
+          <a href="/blog" class="px-2.5 py-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 text-purple-300">All posts</a>
+        </nav>
       </div>
+      <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
     </header>
 
-    <article class="max-w-4xl mx-auto px-6 py-14">
-      <p class="text-purple-400 font-medium text-xs uppercase tracking-widest mb-4">DefDev Blog</p>
-      <h1 class="text-3xl sm:text-4xl font-bold leading-tight text-white mb-3">{title}</h1>
+    <article class="max-w-6xl mx-auto px-6 py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10">
+      <div class="min-w-0">
+        <p class="text-purple-400 font-medium text-xs uppercase tracking-widest mb-4">DefDev Blog</p>
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight text-white mb-3">{title}</h1>
 
-      {(frontmatter.pubDate || frontmatter.date) && (
-        <p class="text-zinc-500 text-sm mb-6">Published {new Date(frontmatter.pubDate ?? frontmatter.date ?? '').toLocaleDateString()}</p>
-      )}
+        {(frontmatter.pubDate || frontmatter.date) && (
+          <p class="text-zinc-500 text-sm mb-6">Published {new Date(frontmatter.pubDate ?? frontmatter.date ?? '').toLocaleDateString()}</p>
+        )}
 
-      {tags.length > 0 && (
-        <div class="flex flex-wrap gap-2 mb-10">
-          {tags.map((tag) => (
-            <span class="text-xs font-medium bg-zinc-900 text-zinc-300 border border-zinc-700 px-2.5 py-1 rounded-full">
-              {tag}
-            </span>
-          ))}
+        {tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-10">
+            {tags.map((tag) => (
+              <span class="text-xs font-medium bg-zinc-900 text-zinc-300 border border-zinc-700 px-2.5 py-1 rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div class="blog-content" id="post-content">
+          <slot />
         </div>
-      )}
-
-      <div class="blog-content">
-        <slot />
       </div>
+
+      {toc.length > 0 && (
+        <aside class="hidden lg:block">
+          <div class="sticky top-24 rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-4 backdrop-blur-sm">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-500 mb-3">On this page</p>
+            <nav aria-label="Table of contents">
+              <ul class="space-y-1.5 text-sm">
+                {toc.map((heading) => (
+                  <li>
+                    <a
+                      href={`#${heading.slug}`}
+                      class:list={[
+                        'toc-link block rounded-md px-2 py-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors',
+                        heading.depth === 3 && 'ml-3 text-xs',
+                      ]}
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </aside>
+      )}
     </article>
   </main>
 
+  <BackToTopButton />
   <Footer />
 </Layout>
 
+<script>
+  const initBlogHeadingAnchors = () => {
+    const content = document.getElementById('post-content');
+    if (!content) return;
+
+    const headings = content.querySelectorAll('h2[id], h3[id]');
+
+    headings.forEach((heading) => {
+      if (heading.querySelector('.heading-anchor')) return;
+
+      const id = heading.getAttribute('id');
+      if (!id) return;
+
+      const anchor = document.createElement('a');
+      anchor.href = `#${id}`;
+      anchor.className = 'heading-anchor';
+      anchor.setAttribute('aria-label', `Link to ${heading.textContent ?? 'section'}`);
+      anchor.textContent = '#';
+      heading.appendChild(anchor);
+    });
+  };
+
+  const initTocActiveLink = () => {
+    const links = Array.from(document.querySelectorAll('.toc-link[href^="#"]'));
+    if (links.length === 0) return;
+
+    const byId = new Map();
+    links.forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      const id = href.slice(1);
+      const el = id ? document.getElementById(id) : null;
+      if (el) {
+        byId.set(id, { link, el });
+      }
+    });
+
+    const updateActive = () => {
+      let activeId = '';
+      const offset = 120;
+
+      byId.forEach(({ el }, id) => {
+        if (el.getBoundingClientRect().top <= offset) {
+          activeId = id;
+        }
+      });
+
+      byId.forEach(({ link }, id) => {
+        const isActive = id === activeId;
+        link.classList.toggle('bg-zinc-800/80', isActive);
+        link.classList.toggle('text-purple-300', isActive);
+      });
+    };
+
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  };
+
+  const init = () => {
+    initBlogHeadingAnchors();
+    initTocActiveLink();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+</script>
+
 <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
   .blog-content {
     color: #d4d4d8;
     line-height: 1.8;
@@ -68,6 +182,7 @@ const tags = frontmatter.tags ?? [];
     font-weight: 700;
     margin-top: 2.3rem;
     margin-bottom: 0.9rem;
+    scroll-margin-top: 6rem;
   }
 
   .blog-content :global(h3) {
@@ -77,6 +192,28 @@ const tags = frontmatter.tags ?? [];
     font-weight: 600;
     margin-top: 1.7rem;
     margin-bottom: 0.6rem;
+    scroll-margin-top: 6rem;
+  }
+
+  .blog-content :global(.heading-anchor) {
+    margin-left: 0.5rem;
+    color: #71717a;
+    font-size: 0.85em;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 120ms ease, color 120ms ease;
+    vertical-align: middle;
+  }
+
+  .blog-content :global(h2:hover .heading-anchor),
+  .blog-content :global(h3:hover .heading-anchor),
+  .blog-content :global(h2:focus-within .heading-anchor),
+  .blog-content :global(h3:focus-within .heading-anchor) {
+    opacity: 1;
+  }
+
+  .blog-content :global(.heading-anchor:hover) {
+    color: #c4b5fd;
   }
 
   .blog-content :global(p) {
