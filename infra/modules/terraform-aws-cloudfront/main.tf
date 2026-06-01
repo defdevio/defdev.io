@@ -54,7 +54,8 @@ resource "aws_cloudfront_function" "url_rewrite" {
   runtime = "cloudfront-js-1.0"
   publish = true
   comment = "Rewrite static routes to index.html for S3 origin"
-  code    = <<-EOT
+
+  code = <<-EOT
 function handler(event) {
   var request = event.request;
   var uri = request.uri;

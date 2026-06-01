@@ -24,4 +24,10 @@
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(4px);
   }
+
+  p img {
+    display: block;
+    max-width: 50%;
+    height: auto;
+  }
 }
