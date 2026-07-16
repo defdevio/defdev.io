@@ -2,6 +2,7 @@
 import Layout from './Layout.astro';
 import Footer from '../components/Footer.astro';
 import BackToTopButton from '../components/BackToTopButton.astro';
+import Giscus from '../components/Giscus.astro';
 
 interface Props {
   frontmatter: {
@@ -87,6 +88,10 @@ const tags = frontmatter.tags ?? [];
 
         <div class="blog-content" id="post-content">
           <slot />
+        </div>
+
+        <div class="mt-14 pt-10 border-t border-zinc-800/50">
+          <Giscus />
         </div>
       </div>
 

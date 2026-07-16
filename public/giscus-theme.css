@@ -1,0 +1,104 @@
+/*!
+ * Custom giscus theme for defdev.io
+ * Matches the site's dark zinc/purple palette (Tailwind zinc scale + custom purple-700).
+ * Based on the structure of giscus's own dark.css (Primer CSS variables).
+ * https://github.com/giscus/giscus/blob/main/styles/themes/dark.css
+ */
+main {
+  --color-prettylights-syntax-comment: #8b949e;
+  --color-prettylights-syntax-constant: #c084fc;
+  --color-prettylights-syntax-entity: #d2a8ff;
+  --color-prettylights-syntax-storage-modifier-import: #f4f4f5;
+  --color-prettylights-syntax-entity-tag: #7ee787;
+  --color-prettylights-syntax-keyword: #a855f7;
+  --color-prettylights-syntax-string: #a5d6ff;
+  --color-prettylights-syntax-variable: #ffa657;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f85149;
+  --color-prettylights-syntax-invalid-illegal-text: #f4f4f5;
+  --color-prettylights-syntax-invalid-illegal-bg: #8e1519;
+  --color-prettylights-syntax-carriage-return-text: #f4f4f5;
+  --color-prettylights-syntax-carriage-return-bg: #b62324;
+  --color-prettylights-syntax-string-regexp: #7ee787;
+  --color-prettylights-syntax-markup-list: #f2cc60;
+  --color-prettylights-syntax-markup-heading: #c084fc;
+  --color-prettylights-syntax-markup-italic: #f4f4f5;
+  --color-prettylights-syntax-markup-bold: #f4f4f5;
+  --color-prettylights-syntax-markup-deleted-text: #ffdcd7;
+  --color-prettylights-syntax-markup-deleted-bg: #67060c;
+  --color-prettylights-syntax-markup-inserted-text: #aff5b4;
+  --color-prettylights-syntax-markup-inserted-bg: #033a16;
+  --color-prettylights-syntax-markup-changed-text: #ffdfb6;
+  --color-prettylights-syntax-markup-changed-bg: #5a1e02;
+  --color-prettylights-syntax-markup-ignored-text: #f4f4f5;
+  --color-prettylights-syntax-markup-ignored-bg: #6f42c1;
+  --color-prettylights-syntax-meta-diff-range: #d2a8ff;
+  --color-prettylights-syntax-brackethighlighter-angle: #a1a1aa;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #71717a;
+  --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
+
+  --color-btn-text: #f4f4f5;
+  --color-btn-bg: #27272a;
+  --color-btn-border: #f4f4f51a;
+  --color-btn-shadow: 0 0 #0000;
+  --color-btn-inset-shadow: 0 0 #0000;
+  --color-btn-hover-bg: #3f3f46;
+  --color-btn-hover-border: #71717a;
+  --color-btn-active-bg: #18181b;
+  --color-btn-active-border: #52525b;
+  --color-btn-selected-bg: #3f3f4680;
+
+  --color-btn-primary-text: #fff;
+  --color-btn-primary-bg: #6f42c1;
+  --color-btn-primary-border: #f4f4f51a;
+  --color-btn-primary-shadow: 0 0 #0000;
+  --color-btn-primary-inset-shadow: 0 0 #0000;
+  --color-btn-primary-hover-bg: #5a389a;
+  --color-btn-primary-hover-border: #f4f4f51a;
+  --color-btn-primary-selected-bg: #4a2d7e;
+  --color-btn-primary-selected-shadow: 0 0 #0000;
+  --color-btn-primary-disabled-text: #ffffff80;
+  --color-btn-primary-disabled-bg: #6f42c199;
+  --color-btn-primary-disabled-border: #f4f4f51a;
+
+  --color-action-list-item-default-hover-bg: #a1a1aa1f;
+  --color-segmented-control-bg: #71717a1a;
+  --color-segmented-control-button-bg: #09090b;
+  --color-segmented-control-button-selected-border: #71717a;
+
+  --color-fg-default: #f4f4f5;
+  --color-fg-muted: #a1a1aa;
+  --color-fg-subtle: #71717a;
+  --color-canvas-default: #09090b;
+  --color-canvas-overlay: #18181b;
+  --color-canvas-inset: #000000;
+  --color-canvas-subtle: #18181b;
+  --color-border-default: #27272a;
+  --color-border-muted: #27272a;
+  --color-neutral-muted: #71717a66;
+  --color-accent-fg: #c084fc;
+  --color-accent-emphasis: #a855f7;
+  --color-accent-muted: #a855f766;
+  --color-accent-subtle: #a855f71a;
+  --color-success-fg: #3fb950;
+  --color-attention-fg: #d29922;
+  --color-attention-muted: #bb800966;
+  --color-attention-subtle: #bb800926;
+  --color-danger-fg: #f85149;
+  --color-danger-muted: #f8514966;
+  --color-danger-subtle: #f851491a;
+  --color-primer-shadow-inset: 0 0 #0000;
+  --color-scale-gray-7: #27272a;
+  --color-scale-blue-8: #4a2d7e;
+
+  /* Extensions from @primer/css/alerts/flash.scss */
+  --color-social-reaction-bg-hover: var(--color-scale-gray-7);
+  --color-social-reaction-bg-reacted-hover: var(--color-scale-blue-8);
+}
+
+main .pagination-loader-container {
+  background-image: url(https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg);
+}
+
+main .gsc-loading-image {
+  background-image: url(https://github.githubassets.com/images/mona-loading-dark.gif);
+}
