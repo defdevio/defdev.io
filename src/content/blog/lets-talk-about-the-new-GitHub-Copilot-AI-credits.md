@@ -4,7 +4,6 @@ description: The much talked about Copilot changes went into effect at 5PM PT to
 pubDate: 2026-05-31
 tags:
   - Opinion
-  - OpenDepot
   - GitHub
   - AI
   - Agent Workflows
