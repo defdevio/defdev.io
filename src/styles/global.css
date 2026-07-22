@@ -27,7 +27,11 @@
 
   p img {
     display: block;
-    max-width: 50%;
     height: auto;
   }
+
+.small-image  { max-width: 33%; }
+.medium-image { max-width: 60%; }
+.large-image  { max-width: 85%; }
+.full-image   { max-width: 100%; }
 }

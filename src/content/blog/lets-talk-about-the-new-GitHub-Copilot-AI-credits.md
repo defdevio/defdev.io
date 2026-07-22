@@ -4,7 +4,6 @@ description: The much talked about Copilot changes went into effect at 5PM PT to
 pubDate: 2026-05-31
 tags:
   - Opinion
-  - OpenDepot
   - GitHub
   - AI
   - Agent Workflows
@@ -28,16 +27,16 @@ When Claude finally returned an answer to a very basic problem, I had already bu
 ### Adjustable Thinking Levels
 The one nice change is the ability to adjust the level of thinking across models. This used to be available in the early days, but they removed it in favor of hardcoding specific thinking modes. Claude Sonnet 4.6 (High), my favorite workhorse in the stable, is no longer locked to a single mode:
 
-![](../../img/vscode_changes_no_set_thinking.png)
+<img src="../../img/vscode_changes_no_set_thinking.png" alt="VSCode No Set Thinking Budget" class="small-image" />
 
 Now you can switch to a thinking mode that works best for your situation. I'm already dropping mine down to `Medium` in hopes of reducing AI credit consumption:
 
-![](../../img/vscode_thinking.png)
+<img src="../../img/vscode_thinking.png" alt="VSCode Thinking Effort" class="medium-image" />
 
 ### Changes to the Model Lineup
 The freebie models are gone. The days of having `GPT-4o mini` available for zero tokens are over. Now, every single available model consumes credits:
 
-![](../../img/vscode_model_stable.png)
+<img src="../../img/vscode_model_stable.png" alt="VSCode Model Stable" class="small-image" />
 
 ### Copilot Max Subscription
 You can now upgrade to the Max subscription, which offers `20,000` AI credits a month. Considering how quickly credits vanish for simple tasks, it's worth considering. Like the sane, rational human being that I am, I immediately upgraded the second I saw the burn rate.
