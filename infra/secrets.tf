@@ -1,39 +1,26 @@
-resource "aws_secretsmanager_secret" "cloudflare_turnstile_widget" {
-  name = "cloudflare-turnstile-widget"
-}
+module "secrets_manager" {
+  source = "github.com/defdevio/terraform-aws-secrets-manager?ref=v1.0.0"
 
-data "aws_iam_policy_document" "allow_lambda" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecret",
-      "secretsmanager:GetSecretValue",
-    ]
+  allowed_principal_arns = [module.iam.role_arns["cloudflare_turnstile_validator"]]
+  name                   = "cloudflare-turnstile-widget"
 
-    resources = [
-      aws_secretsmanager_secret.cloudflare_turnstile_widget.arn
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_iam_role.lambda["cloudflare_turnstile_validator"].arn]
-    }
-  }
-}
-
-resource "aws_secretsmanager_secret_policy" "cloudflare_turnstile_widget" {
-  secret_arn = aws_secretsmanager_secret.cloudflare_turnstile_widget.arn
-  policy     = data.aws_iam_policy_document.allow_lambda.json
-}
-
-resource "aws_secretsmanager_secret_version" "cloudflare_turnstile_widget" {
-  secret_id = aws_secretsmanager_secret.cloudflare_turnstile_widget.id
   secret_string = jsonencode({
-    "site-key"   = cloudflare_turnstile_widget.this.id
-    "secret-key" = cloudflare_turnstile_widget.this.secret
+    "site-key"   = module.cloudflare_resources.turnstile_widget_id
+    "secret-key" = module.cloudflare_resources.turnstile_widget_secret
   })
+}
 
-  lifecycle {
-    ignore_changes = [secret_string]
-  }
+moved {
+  from = aws_secretsmanager_secret.cloudflare_turnstile_widget
+  to   = module.secrets_manager.aws_secretsmanager_secret.this
+}
+
+moved {
+  from = aws_secretsmanager_secret_policy.cloudflare_turnstile_widget
+  to   = module.secrets_manager.aws_secretsmanager_secret_policy.this
+}
+
+moved {
+  from = aws_secretsmanager_secret_version.cloudflare_turnstile_widget
+  to   = module.secrets_manager.aws_secretsmanager_secret_version.this
 }

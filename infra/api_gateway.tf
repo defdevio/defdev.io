@@ -1,6 +1,6 @@
 module "api_gateway" {
   for_each = { for k, v in var.lambda_functions : k => v if k == "cloudflare_turnstile_validator" }
-  source   = "./modules/terraform-aws-api-gateway"
+  source   = "github.com/defdevio/terraform-aws-api-gateway?ref=v1.0.0"
 
   aws_account_id             = local.aws_account_id
   aws_region                 = local.aws_region

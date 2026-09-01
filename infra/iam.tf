@@ -1,23 +1,19 @@
-data "aws_iam_policy_document" "lambda" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+module "iam" {
+  source = "github.com/defdevio/terraform-aws-iam?ref=v1.0.0"
 
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
+  roles = {
+    for key in keys(var.lambda_functions) : key => {
+      name = "lambda-execution-${replace(key, "_", "-")}"
     }
   }
 }
 
-resource "aws_iam_role" "lambda" {
-  for_each           = var.lambda_functions
-  name               = "lambda-execution-${replace(each.key, "_", "-")}"
-  assume_role_policy = data.aws_iam_policy_document.lambda.json
+moved {
+  from = aws_iam_role.lambda
+  to   = module.iam.aws_iam_role.this
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
-  for_each   = var.lambda_functions
-  role       = aws_iam_role.lambda[each.key].id
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+moved {
+  from = aws_iam_role_policy_attachment.lambda_basic
+  to   = module.iam.aws_iam_role_policy_attachment.lambda_basic
 }

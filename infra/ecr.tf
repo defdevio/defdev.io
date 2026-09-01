@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "lambda_ecr_pull" {
 
 module "ecr" {
   for_each = var.lambda_functions
-  source   = "./modules/terraform-aws-ecr"
+  source   = "github.com/defdevio/terraform-aws-ecr?ref=v1.0.0"
 
   name                 = "defdevio/lambda-${replace(each.key, "_", "-")}"
   is_immutable         = each.value.spec.ecr.is_immutable
