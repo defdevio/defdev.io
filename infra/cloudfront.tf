@@ -1,6 +1,6 @@
 module "cloudfront" {
   for_each = { for k, v in var.s3_buckets : k => v if k == "www.defdev.io" }
-  source   = "github.com/defdevio/terraform-aws-cloudfront?ref=v1.0.1"
+  source   = "github.com/defdevio/terraform-aws-cloudfront?ref=v1.0.2"
 
   acm_certificate_arn = module.acm.arn
   aliases             = [each.key]

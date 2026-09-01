@@ -31,7 +31,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | <a name="module_acm"></a> [acm](#module\_acm) | github.com/defdevio/terraform-aws-acm | v1.0.0 |
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | github.com/defdevio/terraform-aws-api-gateway | v1.0.0 |
 | <a name="module_cloudflare_resources"></a> [cloudflare\_resources](#module\_cloudflare\_resources) | github.com/defdevio/terraform-cloudflare-resources | v1.0.2 |
-| <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | github.com/defdevio/terraform-aws-cloudfront | v1.0.1 |
+| <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | github.com/defdevio/terraform-aws-cloudfront | v1.0.2 |
 | <a name="module_ecr"></a> [ecr](#module\_ecr) | github.com/defdevio/terraform-aws-ecr | v1.0.0 |
 | <a name="module_iam"></a> [iam](#module\_iam) | github.com/defdevio/terraform-aws-iam | v1.0.0 |
 | <a name="module_lambda_functions"></a> [lambda\_functions](#module\_lambda\_functions) | github.com/defdevio/terraform-aws-lambda | v1.0.0 |
