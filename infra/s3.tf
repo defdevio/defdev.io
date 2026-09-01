@@ -1,6 +1,6 @@
 module "s3" {
   for_each = var.s3_buckets
-  source   = "./modules/terraform-aws-s3"
+  source   = "github.com/defdevio/terraform-aws-s3?ref=v1.0.0"
 
   bucket_name                          = each.key
   is_bucket_website                    = each.value.spec.is_bucket_website

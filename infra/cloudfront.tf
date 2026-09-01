@@ -1,17 +1,10 @@
-# sleep for 5m to ensure that acm has had time to validate
-# the certificate once the validation record has been created
-# in cloudflare
-resource "time_sleep" "wait_5_minutes" {
-  create_duration = "5m"
-  depends_on      = [cloudflare_dns_record.www_defdev_io_acm_validation]
-}
-
 module "cloudfront" {
   for_each = { for k, v in var.s3_buckets : k => v if k == "www.defdev.io" }
-  source   = "./modules/terraform-aws-cloudfront"
+  source   = "github.com/defdevio/terraform-aws-cloudfront?ref=v1.0.1"
 
-  acm_certificate_arn = aws_acm_certificate.this.arn
+  acm_certificate_arn = module.acm.arn
   aliases             = [each.key]
+  cloudflare_zone_id  = "41bd26725ef299b72663216ffa012106"
   origin_id           = each.key
   domain_name         = each.value.spec.is_bucket_website ? module.s3[each.key].bucket_website_endpoint : module.s3[each.key].bucket_regional_domain_name
 
@@ -22,6 +15,21 @@ module "cloudfront" {
   }
 
   depends_on = [
-    time_sleep.wait_5_minutes
+    module.cloudflare_resources
   ]
+}
+
+moved {
+  from = time_sleep.wait_5_minutes
+  to   = module.cloudflare_resources.time_sleep.wait_5_minutes
+}
+
+moved {
+  from = cloudflare_record.www_defdev_io_cloudfront_record
+  to   = cloudflare_dns_record.www_defdev_io_cloudfront_record
+}
+
+moved {
+  from = cloudflare_dns_record.www_defdev_io_cloudfront_record
+  to   = module.cloudfront["www.defdev.io"].cloudflare_dns_record.www
 }

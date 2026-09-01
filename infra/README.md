@@ -23,45 +23,30 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.84.0 |
-| <a name="provider_aws.east"></a> [aws.east](#provider\_aws.east) | 5.84.0 |
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.19.1 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.12.1 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | ./modules/terraform-aws-api-gateway | n/a |
-| <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | ./modules/terraform-aws-cloudfront | n/a |
-| <a name="module_ecr"></a> [ecr](#module\_ecr) | ./modules/terraform-aws-ecr | n/a |
-| <a name="module_lambda_functions"></a> [lambda\_functions](#module\_lambda\_functions) | ./modules/terraform-aws-lambda | n/a |
-| <a name="module_s3"></a> [s3](#module\_s3) | ./modules/terraform-aws-s3 | n/a |
-| <a name="module_ses"></a> [ses](#module\_ses) | ./modules/terraform-aws-ses | n/a |
+| <a name="module_acm"></a> [acm](#module\_acm) | github.com/defdevio/terraform-aws-acm | v1.0.0 |
+| <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | github.com/defdevio/terraform-aws-api-gateway | v1.0.0 |
+| <a name="module_cloudflare_resources"></a> [cloudflare\_resources](#module\_cloudflare\_resources) | github.com/defdevio/terraform-cloudflare-resources | v1.0.2 |
+| <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | github.com/defdevio/terraform-aws-cloudfront | v1.0.1 |
+| <a name="module_ecr"></a> [ecr](#module\_ecr) | github.com/defdevio/terraform-aws-ecr | v1.0.0 |
+| <a name="module_iam"></a> [iam](#module\_iam) | github.com/defdevio/terraform-aws-iam | v1.0.0 |
+| <a name="module_lambda_functions"></a> [lambda\_functions](#module\_lambda\_functions) | github.com/defdevio/terraform-aws-lambda | v1.0.0 |
+| <a name="module_s3"></a> [s3](#module\_s3) | github.com/defdevio/terraform-aws-s3 | v1.0.0 |
+| <a name="module_secrets_manager"></a> [secrets\_manager](#module\_secrets\_manager) | github.com/defdevio/terraform-aws-secrets-manager | v1.0.0 |
+| <a name="module_ses"></a> [ses](#module\_ses) | github.com/defdevio/terraform-aws-ses | v1.0.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_acm_certificate.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/acm_certificate) | resource |
-| [aws_iam_role.lambda](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy_attachment.lambda_basic](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lambda_permission.cloudflare_validator](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/lambda_permission) | resource |
 | [aws_s3_bucket_policy.allow_cloudfront_origin](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/s3_bucket_policy) | resource |
-| [aws_secretsmanager_secret.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret) | resource |
-| [aws_secretsmanager_secret_policy.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_policy) | resource |
-| [aws_secretsmanager_secret_version.cloudflare_turnstile_widget](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/secretsmanager_secret_version) | resource |
-| [cloudflare_dns_record.apex_defdev_io_www_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
-| [cloudflare_dns_record.ses_dkim_records](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
-| [cloudflare_dns_record.ses_email_verification](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
-| [cloudflare_dns_record.www_defdev_io_acm_validation](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
-| [cloudflare_dns_record.www_defdev_io_cloudfront_record](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
-| [cloudflare_ruleset.apex_to_www_redirect](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/ruleset) | resource |
-| [cloudflare_turnstile_widget.this](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/turnstile_widget) | resource |
-| [time_sleep.wait_5_minutes](https://registry.terraform.io/providers/hashicorp/time/0.12.1/docs/resources/sleep) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.allow_cloudfront_origin](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.allow_lambda](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.lambda](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_ecr_pull](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/region) | data source |
 | [aws_secretsmanager_secret.cloudflare](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/secretsmanager_secret) | data source |

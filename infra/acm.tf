@@ -1,10 +1,14 @@
-resource "aws_acm_certificate" "this" {
-  provider          = aws.east
-  domain_name       = "*.defdev.io"
-  key_algorithm     = "RSA_2048"
-  validation_method = "DNS"
+module "acm" {
+  source = "github.com/defdevio/terraform-aws-acm?ref=v1.0.0"
 
-  lifecycle {
-    create_before_destroy = true
+  domain_name = "*.defdev.io"
+
+  providers = {
+    aws = aws.east
   }
+}
+
+moved {
+  from = aws_acm_certificate.this
+  to   = module.acm.aws_acm_certificate.this
 }
