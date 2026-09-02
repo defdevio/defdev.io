@@ -1,5 +1,7 @@
 module "iam" {
-  source = "github.com/defdevio/terraform-aws-iam?ref=v1.0.0"
+  source = "github.com/defdevio/terraform-aws-iam?ref=v1.1.0"
+
+  account_id = local.aws_account_id
 
   roles = {
     for key in keys(var.lambda_functions) : key => {
