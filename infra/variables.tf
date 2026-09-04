@@ -4,11 +4,8 @@ variable "lambda_functions" {
 
   type = map(object({
     spec = object({
-      description           = string
-      timeout               = optional(number, 5)
-      environment_variables = optional(map(string), {})
-      entry_point           = optional(list(string))
-      command               = optional(list(string))
+      description = string
+      timeout     = optional(number, 5)
       ecr = object({
         is_immutable = optional(bool, false)
         image_tag    = string

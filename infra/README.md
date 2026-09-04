@@ -34,7 +34,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | github.com/defdevio/terraform-aws-cloudfront | v1.0.2 |
 | <a name="module_ecr"></a> [ecr](#module\_ecr) | github.com/defdevio/terraform-aws-ecr | v1.0.0 |
 | <a name="module_iam"></a> [iam](#module\_iam) | github.com/defdevio/terraform-aws-iam | v1.1.0 |
-| <a name="module_lambda_functions"></a> [lambda\_functions](#module\_lambda\_functions) | github.com/defdevio/terraform-aws-lambda | v1.1.1 |
+| <a name="module_lambda_functions"></a> [lambda\_functions](#module\_lambda\_functions) | github.com/defdevio/terraform-aws-lambda | v1.0.0 |
 | <a name="module_s3"></a> [s3](#module\_s3) | github.com/defdevio/terraform-aws-s3 | v1.0.0 |
 | <a name="module_secrets_manager"></a> [secrets\_manager](#module\_secrets\_manager) | github.com/defdevio/terraform-aws-secrets-manager | v1.0.0 |
 | <a name="module_ses"></a> [ses](#module\_ses) | github.com/defdevio/terraform-aws-ses | v1.0.0 |
@@ -56,7 +56,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_lambda_functions"></a> [lambda\_functions](#input\_lambda\_functions) | A map of Lambda Functions specs to deploy. | <pre>map(object({<br/>    spec = object({<br/>      description           = string<br/>      timeout               = optional(number, 5)<br/>      environment_variables = optional(map(string), {})<br/>      entry_point           = optional(list(string))<br/>      command               = optional(list(string))<br/>      ecr = object({<br/>        is_immutable = optional(bool, false)<br/>        image_tag    = string<br/>      })<br/>    })<br/>  }))</pre> | `{}` | no |
+| <a name="input_lambda_functions"></a> [lambda\_functions](#input\_lambda\_functions) | A map of Lambda Functions specs to deploy. | <pre>map(object({<br/>    spec = object({<br/>      description = string<br/>      timeout     = optional(number, 5)<br/>      ecr = object({<br/>        is_immutable = optional(bool, false)<br/>        image_tag    = string<br/>      })<br/>    })<br/>  }))</pre> | `{}` | no |
 | <a name="input_s3_buckets"></a> [s3\_buckets](#input\_s3\_buckets) | A map of S3 bucket definitions to deploy. | <pre>map(object({<br/>    spec = object({<br/>      is_bucket_website   = optional(bool, false)<br/>      source_file_path    = optional(string, null)<br/>      source_file_pattern = optional(string, null)<br/><br/>      redirect_all_requests_to = optional(map(object({<br/>        protocol = string<br/>      })), {})<br/>    })<br/>  }))</pre> | `{}` | no |
 
 ## Outputs
