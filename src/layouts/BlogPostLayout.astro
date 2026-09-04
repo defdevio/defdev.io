@@ -27,7 +27,7 @@ const tags = frontmatter.tags ?? [];
 
 <Layout title={`${title} | DefDev Blog`} description={description}>
   <main id="top" class="min-h-screen bg-zinc-950 text-zinc-100">
-    <header class="sticky top-0 z-40 border-b border-zinc-800/50 bg-zinc-950/95 backdrop-blur-sm relative">
+    <header class="sticky top-0 z-40 border-b border-zinc-800/50 bg-zinc-950/90 backdrop-blur-sm relative">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
         <a href="/" class="inline-flex items-center text-zinc-300 hover:text-white transition-colors" aria-label="Back to home">
           <img src="/img/white_logo_mini.svg" alt="DefDev" class="h-10 w-10 sm:h-11 sm:w-11 drop-shadow-[0_0_12px_rgba(168,85,247,0.4)]" />
@@ -38,7 +38,7 @@ const tags = frontmatter.tags ?? [];
           <a href="/blog" class="px-2.5 py-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 text-purple-300">All posts</a>
         </nav>
       </div>
-      <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
     </header>
 
     <article class="max-w-6xl mx-auto px-6 py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10">
