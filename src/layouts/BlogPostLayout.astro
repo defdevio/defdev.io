@@ -12,6 +12,7 @@ interface Props {
     date?: string;
     tags?: string[];
   };
+  readingTime?: number;
   toc?: {
     depth: number;
     slug: string;
@@ -19,7 +20,7 @@ interface Props {
   }[];
 }
 
-const { frontmatter, toc = [] } = Astro.props as Props;
+const { frontmatter, readingTime, toc = [] } = Astro.props as Props;
 const title = frontmatter.title ?? 'DefDev Blog';
 const description = frontmatter.description ?? 'DefDev engineering blog';
 const tags = frontmatter.tags ?? [];
@@ -46,8 +47,14 @@ const tags = frontmatter.tags ?? [];
         <p class="text-purple-400 font-medium text-xs uppercase tracking-widest mb-4">DefDev Blog</p>
         <h1 class="text-3xl sm:text-4xl font-bold leading-tight text-white mb-3">{title}</h1>
 
-        {(frontmatter.pubDate || frontmatter.date) && (
-          <p class="text-zinc-500 text-sm mb-6">Published {new Date(frontmatter.pubDate ?? frontmatter.date ?? '').toLocaleDateString()}</p>
+        {(frontmatter.pubDate || frontmatter.date || readingTime) && (
+          <div class="flex items-center gap-2 text-zinc-500 text-sm mb-6">
+            {(frontmatter.pubDate || frontmatter.date) && (
+              <span>Published {new Date(frontmatter.pubDate ?? frontmatter.date ?? '').toLocaleDateString()}</span>
+            )}
+            {(frontmatter.pubDate || frontmatter.date) && readingTime && <span aria-hidden="true">·</span>}
+            {readingTime && <span>{readingTime} min read</span>}
+          </div>
         )}
 
         {tags.length > 0 && (
@@ -277,6 +284,24 @@ const tags = frontmatter.tags ?? [];
     border-radius: 0.35rem;
     padding: 0.1rem 0.35rem;
     font-size: 0.92em;
+  }
+
+  .blog-content :global(.mermaid-diagram),
+  .blog-content :global(pre.mermaid) {
+    margin: 2rem 0;
+    overflow-x: auto;
+    border: 1px solid rgba(63, 63, 70, 0.8);
+    border-radius: 0.75rem;
+    background: rgba(24, 24, 27, 0.7);
+    padding: 1.25rem;
+  }
+
+  .blog-content :global(.mermaid-diagram svg) {
+    display: block;
+    width: 100%;
+    min-width: 34rem;
+    height: auto;
+    margin: 0 auto;
   }
 
   .blog-content :global(pre) {
