@@ -26,11 +26,13 @@ Generated Terraform often looks solid in isolation. The difficulty is that devel
 
 The result is an infrastructure bottleneck. AI was supposed to reduce the platform team’s workload, yet more of that workload shifted toward reviewing generated changes, explaining the surrounding architecture, correcting misunderstandings, and helping developers through multiple iterations.
 
-> We are in an age where we can create content far faster than we can consume it
+> We are in an age where we can create content far faster than we can consume it.
 
 I decided to join the discussion because I had encountered a similar problem before LLMs became part of the modern development workflow. To my surprise, the comment gained significant traction, and several Redditors wanted to know what I meant by opinionated, self-service IaC built around a unified interface.
 
 So, here's my approach and an explanation of what I call the Interface Module pattern. The pattern is best defined as a narrow, opinionated infrastructure API that gives consumers a declarative way to request platform capabilities without requiring them to understand every underlying implementation detail. The result is self-service infrastructure that developers and LLMs alike can deploy independently, while the platform team retains control over security, standards, and operational behavior.
+
+> If you prefer to see an example implementation before reading about the design principles, jump to [See It in Practice](#see-it-in-practice), where I link to two repositories I created for this article.
 
 ## What is an Interface Module?
 An Interface Module is an IaC module that provides a minimal consumer API for orchestrating lower-level modules in an opinionated fashion without exposing users to the underlying system's complexity.
@@ -47,6 +49,25 @@ An Interface Module should:
 - Separate the consumer contract from the implementation details.
 - Be released, tested, documented, and operated like a product.
 - Allow the platform team to evolve the internals without forcing every consumer to understand them.
+
+```mermaid
+flowchart LR
+    Consumer["Application team"]
+    Interface["Interface Module"]
+    Lambda["Lambda module"]
+    IAM["IAM module"]
+    ECR["ECR module"]
+    S3["S3 module"]
+
+    Consumer -->|"lambda_functions\ns3_buckets"| Interface
+    Interface --> Lambda
+    Interface --> IAM
+    Interface --> ECR
+    Interface --> S3
+    IAM -->|"role ARN"| Lambda
+    ECR -->|"repository URL"| Lambda
+    S3 -->|"bucket ARN"| Lambda
+```
 
 ## Consumer API Contracts
 Let’s start by discussing what a consumer API contract means in the context of an Interface Module. To make a self-service module easier to use, we need to design our inputs with the utmost care. In the `opentofu` and `terraform` world, `variables` become our input contracts, and `outputs` define the output contracts. For consumer-facing interfaces in an Interface Module, well-designed variables are critical.
@@ -193,9 +214,22 @@ Platform teams often need bespoke configurations for third-party integrations. I
 
 This also means lower-level modules do not need to be fractured into separate variants for every persona. An Interface Module can expose only the capabilities appropriate for its consumers while the underlying module continues to support a broader set of use cases.
 
+```mermaid
+flowchart LR
+    Platform["Platform team"]
+    App["Application team"]
+
+    Lower["Lower-level modules\nbroad and flexible"]
+    Interface["Interface Module\nopinionated contract"]
+
+    Platform --> Lower
+    App --> Interface
+    Interface --> Lower
+```
+
 For example, the lower-level `terraform-aws-iam` module shown earlier does not validate whether `custom_iam_policy_statements.resources` contains a wildcard value such as `*`. A wildcard may be legitimate for some platform integrations, such as account-wide monitoring. Adding that validation to the lower-level module would either prevent those use cases or require a feature flag that could be easy to overlook.
 
-Let’s return to the Lambda contract from earlier with this new context in mind. We can extend it with custom IAM policy statements for cases where application-specific permissions are needed. The lower-level IAM module supports this capability, but the Interface Module can apply stricter rules for application developers.
+Let’s return to the Lambda contract from earlier with this new context in mind. We can extend it with custom IAM policy statements for cases where application-specific permissions are needed. The lowmisconfigure IAM module supports this capability, but the Interface Module can apply stricter rules for application developers.
 
 Developers commonly reach for `*` when they are trying to get an application working quickly. The Interface Module can prevent that shortcut by rejecting wildcard values in both `actions` and `resources` before the configuration produces a valid plan.
 
@@ -248,6 +282,25 @@ roles = {
 ## Wire in Dependencies Automatically
 Let’s take this one step further by showing how an Interface Module can help developers consume the opinionated services it creates. We’ll add an `s3_buckets` contract and use it to provision the lower-level `terraform-aws-s3` module. Then we’ll use the resulting bucket ARN as a Lambda environment variable, allowing the application to access the bucket without requiring the developer to assemble or pass those resource details manually.
 
+```mermaid
+flowchart TD
+    Input["lambda_functions.orders"]
+    BucketInput["s3_buckets.order_exports"]
+    Key["resource_key_ref = orders"]
+    Role["IAM role for orders"]
+    Bucket["S3 bucket"]
+    Env["DEFDEVIO_BUCKET_ARNS"]
+    Runtime["Lambda runtime"]
+
+    Input --> Role
+    BucketInput --> Key
+    Key --> Role
+    BucketInput --> Bucket
+    Role --> Bucket
+    Bucket --> Env
+    Env --> Runtime
+```
+
 First, we’ll define the consumer contract and wire it to the lower-level S3 module:
 
 ```hcl
@@ -299,7 +352,8 @@ module "s3" {
   ) : null
 }
 ```
-The optional `resource_key_ref` lets a bucket declare which Lambda function should receive access. The Interface Module resolves that reference against the roles it created for `var.lambda_functions` and passes the resulting role ARN to the lower-level S3 module.
+The optional `resource_key_ref` lets a bucket declare which Lambda function should receive access. The Interface Module resolves that reference against the roles it created for `var.lambda_functions` and passe
+s the resulting role ARN to the lower-level S3 module.
 
 This keeps the relationship expressed as a logical function key instead of forcing developers to manually look up or pass IAM role ARNs. The same value is also passed through to the lower-level module so it can associate each bucket with the correct Lambda function.
 
@@ -414,7 +468,8 @@ The Interface Module I mentioned in my Reddit comment was much broader in produc
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-10">
   <section class="bg-zinc-900 border border-zinc-800 hover:border-purple-700/50 rounded-xl p-6 transition-colors">
     <div class="flex items-center gap-3 mb-4">
-      <h3 class="text-base font-semibold text-white">Application Delivery</h3>
+      <span class="material-icons flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-purple-900/50 text-purple-400" aria-hidden="true">rocket_launch</span>
+      <h3 class="text-base font-semibold text-white !mt-0 !mb-0 !leading-none">Application Delivery</h3>
     </div>
     <p class="text-zinc-400 text-sm leading-relaxed mb-3">
       Teams could deploy Argo CD applications through a centralized Helm chart
@@ -428,7 +483,8 @@ The Interface Module I mentioned in my Reddit comment was much broader in produc
 
   <section class="bg-zinc-900 border border-zinc-800 hover:border-purple-700/50 rounded-xl p-6 transition-colors">
     <div class="flex items-center gap-3 mb-4">
-      <h3 class="text-base font-semibold text-white">Identity and Security</h3>
+      <span class="material-icons flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-purple-900/50 text-purple-400" aria-hidden="true">security</span>
+      <h3 class="text-base font-semibold text-white !mt-0 !mb-0 !leading-none">Identity and Security</h3>
     </div>
     <p class="text-zinc-400 text-sm leading-relaxed mb-3">
       The module created IAM roles, IRSA integrations, security groups,
@@ -442,7 +498,8 @@ The Interface Module I mentioned in my Reddit comment was much broader in produc
 
   <section class="bg-zinc-900 border border-zinc-800 hover:border-purple-700/50 rounded-xl p-6 transition-colors">
     <div class="flex items-center gap-3 mb-4">
-      <h3 class="text-base font-semibold text-white">Data and Messaging</h3>
+      <span class="material-icons flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-purple-900/50 text-purple-400" aria-hidden="true">storage</span>
+      <h3 class="text-base font-semibold text-white !mt-0 !mb-0 !leading-none">Data and Messaging</h3>
     </div>
     <p class="text-zinc-400 text-sm leading-relaxed mb-3">
       Application teams could request databases, caches, object storage,
@@ -457,7 +514,8 @@ The Interface Module I mentioned in my Reddit comment was much broader in produc
 
   <section class="bg-zinc-900 border border-zinc-800 hover:border-purple-700/50 rounded-xl p-6 transition-colors">
     <div class="flex items-center gap-3 mb-4">
-      <h3 class="text-base font-semibold text-white">Runtime Infrastructure</h3>
+      <span class="material-icons flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-purple-900/50 text-purple-400" aria-hidden="true">dns</span>
+      <h3 class="text-base font-semibold text-white !mt-0 !mb-0 !leading-none">Runtime Infrastructure</h3>
     </div>
     <p class="text-zinc-400 text-sm leading-relaxed mb-3">
       The interface also covered the compute and networking resources needed to
@@ -534,5 +592,7 @@ In the comments section, I’d love to hear about your experiences creating self
 
 For readers who want to go deeper, I put together two concrete examples that show the pattern in practice:
 
-1. The Interface Module we started building together, shown here as a complete working example with some Terratest validations. You can review and run it by opening a pull request: [interface-module-example](https://github.com/defdevio/interface-module-example)
+## See It in Practice
+For readers who want to jump right in or take a deeper look, I put together two concrete examples that show the pattern in practice:
+1. The Interface Module we started building together, shown here as a complete working example with some added `terratest` validations triggered on pull requests: [interface-module-example](https://github.com/defdevio/interface-module-example#interface-module)
 2. A stack that calls the Interface Module so you can see firsthand the developer experience it is designed to emulate: [interface-module-stack-example](https://github.com/defdevio/interface-module-stack-example/blob/main/main.tf)
