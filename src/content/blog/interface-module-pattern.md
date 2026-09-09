@@ -146,7 +146,7 @@ Here's what is happening under the hood of the interface module:
 module "iam" {
   source = "github.com/defdevio/terraform-aws-iam?ref=v1.2.0"
 
-  account_id = "123456789012"
+  account_id = var.aws_account_id
 
   roles = {
     for key, function in var.lambda_functions : key => {
@@ -176,7 +176,7 @@ data "aws_iam_policy_document" "lambda_ecr_pull" {
 
       values = [
         for key, _ in var.lambda_functions :
-        "arn:aws:lambda:${local.aws_region}:${local.aws_account_id}:function:${replace(key, "_", "-")}"
+        "arn:aws:lambda:${var.aws_region}:${var.aws_account_id}:function:${replace(key, "_", "-")}"
       ]
     }
   }
@@ -229,7 +229,7 @@ flowchart LR
 
 For example, the lower-level `terraform-aws-iam` module shown earlier does not validate whether `custom_iam_policy_statements.resources` contains a wildcard value such as `*`. A wildcard may be legitimate for some platform integrations, such as account-wide monitoring. Adding that validation to the lower-level module would either prevent those use cases or require a feature flag that could be easy to overlook.
 
-Let’s return to the Lambda contract from earlier with this new context in mind. We can extend it with custom IAM policy statements for cases where application-specific permissions are needed. The lowmisconfigure IAM module supports this capability, but the Interface Module can apply stricter rules for application developers.
+Let’s return to the Lambda contract from earlier with this new context in mind. We can extend it with custom IAM policy statements for cases where application-specific permissions are needed. The lower-level IAM module supports this capability, but the Interface Module can apply stricter rules for application developers.
 
 Developers commonly reach for `*` when they are trying to get an application working quickly. The Interface Module can prevent that shortcut by rejecting wildcard values in both `actions` and `resources` before the configuration produces a valid plan.
 
@@ -301,7 +301,7 @@ flowchart TD
     Env --> Runtime
 ```
 
-First, we’ll define the consumer contract and wire it to the lower-level S3 module:
+First, we’ll define the consumer contract:
 
 ```hcl
 # variables.tf
@@ -329,6 +329,8 @@ variable "s3_buckets" {
 }
 ```
 
+Then wire it to the lower-level S3 module:
+
 ```hcl
 # s3.tf
 module "s3" {
@@ -341,19 +343,19 @@ module "s3" {
 
   bucket_name = trimsuffix(
     substr(
-      "${var.account_id}-${replace(each.key, "_", "-")}-${var.aws_region}", 0, 63
+      "${var.aws_account_id}-${replace(each.key, "_", "-")}-${var.aws_region}", 0, 63
     ), "-"
   )
 
   iam_role_arn = each.value.spec.resource_key_ref != null ? format(
     "arn:aws:iam::%s:role/lambda-execution-%s",
-    var.account_id,
+    var.aws_account_id,
     replace(each.value.spec.resource_key_ref, "_", "-")
   ) : null
 }
 ```
-The optional `resource_key_ref` lets a bucket declare which Lambda function should receive access. The Interface Module resolves that reference against the roles it created for `var.lambda_functions` and passe
-s the resulting role ARN to the lower-level S3 module.
+
+The optional `resource_key_ref` lets a bucket declare which Lambda function should receive access. The Interface Module resolves that reference against the roles it created for `var.lambda_functions` and passes the resulting role ARN to the lower-level S3 module.
 
 This keeps the relationship expressed as a logical function key instead of forcing developers to manually look up or pass IAM role ARNs. The same value is also passed through to the lower-level module so it can associate each bucket with the correct Lambda function.
 
@@ -554,7 +556,7 @@ module "application" {
           {
             sid       = "ReadOrders"
             actions   = ["dynamodb:GetItem"]
-            resources = ["arn:aws:dynamodb:${var.aws_region}:${var.account_id}:table/orders"]
+            resources = ["arn:aws:dynamodb:${var.aws_region}:${var.aws_account_id}:table/orders"]
           }
         ]
       }
@@ -583,7 +585,7 @@ Today, the Interface Module is a widely discussed product within our technology 
 
 For platform teams, this meant that a significant burden was taken off our shoulders. Development teams were building their own infrastructure, so our support could focus on adding new features, fixing bugs, and taking the module through the usual software development life cycle.
 
-With the platform team no longer spending as much time answering the same infrastructure questions, we now had additional capacity to focus on exciting new ventures like creating and using agents to make the Interface Module easier to understand and use. We now document the API specifications and product functionality in Confluence, then connect an OpenSearch Knowledge Base to index the relevant pages. Our agent uses that knowledge base as its source of truth, helping developers build new patterns and troubleshoot problems with the Interface Module as another self-service offering
+With the platform team no longer spending as much time answering the same infrastructure questions, we now had additional capacity to focus on exciting new ventures like creating and using agents to make the Interface Module easier to understand and use. We now document the API specifications and product functionality in Confluence, then connect an OpenSearch Knowledge Base to index the relevant pages. Our agent uses that knowledge base as its source of truth, helping developers build new patterns and troubleshoot problems with the Interface Module as another self-service offering.
 
 ## Conclusion
 Many readers coming from Reddit may have expected me to talk about Backstage, Port, or another internal developer portal. Those are all useful tools, but they carry real platform overhead. The point here is simpler: `terraform` and `opentofu` already give us enough building blocks to create self-service infrastructure without forcing teams into a heavier UI or TypeScript-driven platform layer. If this pattern helps you design better developer experiences for your teams, that is the outcome I hoped to illustrate!
