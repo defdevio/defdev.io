@@ -23,6 +23,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.84.0 |
+| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 5.19.1 |
 
 ## Modules
 
@@ -45,6 +46,7 @@ We also build our `CloudFront` distribution which is used to cache the website i
 |------|------|
 | [aws_lambda_permission.cloudflare_validator](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/lambda_permission) | resource |
 | [aws_s3_bucket_policy.allow_cloudfront_origin](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/resources/s3_bucket_policy) | resource |
+| [cloudflare_dns_record.opendepot_pages](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/dns_record) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.allow_cloudfront_origin](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_ecr_pull](https://registry.terraform.io/providers/hashicorp/aws/5.84.0/docs/data-sources/iam_policy_document) | data source |

@@ -9,6 +9,15 @@ module "cloudflare_resources" {
   zone_id                       = "41bd26725ef299b72663216ffa012106"
 }
 
+resource "cloudflare_dns_record" "opendepot_pages" {
+  zone_id = "41bd26725ef299b72663216ffa012106"
+  name    = "opendepot"
+  type    = "CNAME"
+  content = "tonedefdev.github.io"
+  ttl     = 1
+  proxied = false
+}
+
 moved {
   from = cloudflare_record.www_defdev_io_acm_validation
   to   = cloudflare_dns_record.www_defdev_io_acm_validation
