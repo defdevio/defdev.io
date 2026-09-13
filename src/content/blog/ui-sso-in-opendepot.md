@@ -313,6 +313,6 @@ If you have any questions, comments, feedback, or new feature ideas, I'd love to
 
 ---
 
-- [Registry Explorer Guide](https://tonedefdev.github.io/opendepot/guides/registry-explorer/) - A guide to walk through the architecture and specific configuration details for the Registry Explorer.
-- [OIDC Authentication (Dex)](https://tonedefdev.github.io/opendepot/configuration/oidc/) - A detailed guide on how to configure Dex for use with OpenDepot.
-- [Full Documentation](https://tonedefdev.github.io/opendepot/) - Everything you need to get set up, configured, and running your own registry.
+- [Registry Explorer Guide](https://opendepot.defdev.io/docs/guides/registry-explorer/) - A guide to walk through the architecture and specific configuration details for the Registry Explorer.
+- [OIDC Authentication (Dex)](https://opendepot.defdev.io/docs/configuration/oidc/) - A detailed guide on how to configure Dex for use with OpenDepot.
+- [Full Documentation](https://opendepot.defdev.io/docs/) - Everything you need to get set up, configured, and running your own registry.
