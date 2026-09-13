@@ -399,6 +399,6 @@ That's all there is to it on the consuming side! It's simple and easy to get sta
 
 ---
 
-- [Full Documentation](https://tonedefdev.github.io/opendepot/) - Everything you need to get set up, configured, and running your own registry.
-- [Local Quickstart](https://tonedefdev.github.io/opendepot/getting-started/quickstart/) - Run a fully functional registry on your laptop with kind in minutes, no cloud account needed.
-- [Installation Guide](https://tonedefdev.github.io/opendepot/getting-started/installation/) - Deploy OpenDepot to your cluster with Helm.
+- [Full Documentation](https://opendepot.defdev.io/docs/) - Everything you need to get set up, configured, and running your own registry.
+- [Local Quickstart](https://opendepot.defdev.io/docs/getting-started/quickstart/) - Run a fully functional registry on your laptop with kind in minutes, no cloud account needed.
+- [Installation Guide](https://opendepot.defdev.io/docs/getting-started/installation/) - Deploy OpenDepot to your cluster with Helm.
